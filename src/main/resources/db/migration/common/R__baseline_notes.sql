@@ -1,0 +1,2 @@
+-- Common Flyway location reserved for vendor-neutral migrations.
+-- Create-table DDL lives in vendor-specific folders to keep PostgreSQL, H2 and SQL Server compatible.

@@ -1,0 +1,4 @@
+# Exclude generated outputs and temporary local artifacts from formatting.
+build/**
+.gradle/**
+.gradle-wrapper/**

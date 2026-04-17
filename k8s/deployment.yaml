@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-starter-boilerplate
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-starter-boilerplate
+  template:
+    metadata:
+      labels:
+        app: java-starter-boilerplate
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: app
+          image: java-starter-boilerplate:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: java-starter-boilerplate-config
+            - secretRef:
+                name: java-starter-boilerplate-secret
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - curl -fsS -X POST http://127.0.0.1:8080/health/drain || true; sleep 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi

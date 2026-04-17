@@ -1,0 +1,196 @@
+openapi: 3.0.1
+info:
+  title: java-starter-boilerplate
+  description: Production-grade Micronaut starter for future document sealing and
+    signing services
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 0.1.0-SNAPSHOT
+paths:
+  /rest/v1/info:
+    get:
+      tags:
+      - Operations
+      summary: Read application metadata
+      description: "Returns application version, active profiles and integration readiness\
+        \ placeholders."
+      operationId: info
+      responses:
+        "200":
+          description: info 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationInfoResponse"
+  /rest/v1/sample-documents:
+    get:
+      tags:
+      - Sample Documents
+      summary: List sample documents
+      description: Returns boilerplate sample document records from the persistence
+        adapter.
+      operationId: list
+      responses:
+        "200":
+          description: list 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SampleDocumentResponse"
+    post:
+      tags:
+      - Sample Documents
+      summary: Create a sample document
+      description: Creates a boilerplate sample record without applying any PDF sealing
+        or signature workflow.
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSampleDocumentRequest"
+        required: true
+      responses:
+        "200":
+          description: create 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SampleDocumentResponse"
+  /rest/v1/sample-documents/{id}:
+    get:
+      tags:
+      - Sample Documents
+      summary: Get a sample document
+      description: Loads a single boilerplate sample document by identifier.
+      operationId: get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: get 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SampleDocumentResponse"
+  /health/liveness:
+    get:
+      tags:
+      - Health
+      summary: Liveness probe
+      description: Reports whether the process is alive.
+      operationId: liveness
+      responses:
+        "200":
+          description: liveness 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationalStatusResponse"
+  /health/readiness:
+    get:
+      tags:
+      - Health
+      summary: Readiness probe
+      description: Reports whether the service is ready to accept traffic.
+      operationId: readiness
+      responses:
+        "200":
+          description: readiness 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationalStatusResponse"
+components:
+  schemas:
+    ApplicationComponentStatusResponse:
+      required:
+      - component
+      - detail
+      - enabled
+      type: object
+      properties:
+        component:
+          type: string
+        enabled:
+          type: boolean
+        detail:
+          type: string
+    ApplicationInfoResponse:
+      required:
+      - activeDatabaseProfile
+      - activeEnvironments
+      - description
+      - integrations
+      - name
+      - version
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        description:
+          type: string
+        activeDatabaseProfile:
+          type: string
+        activeEnvironments:
+          type: array
+          items:
+            type: string
+        integrations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApplicationComponentStatusResponse"
+    CreateSampleDocumentRequest:
+      required:
+      - name
+      - storageKey
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        storageKey:
+          minLength: 1
+          type: string
+    OperationalStatusResponse:
+      required:
+      - endpoint
+      - status
+      - timestamp
+      type: object
+      properties:
+        status:
+          type: string
+        endpoint:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    SampleDocumentResponse:
+      required:
+      - createdAt
+      - id
+      - name
+      - storageKey
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        storageKey:
+          type: string
+        createdAt:
+          type: string
+          format: date-time

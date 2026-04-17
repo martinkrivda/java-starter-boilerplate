@@ -1,0 +1,17 @@
+.DS_Store
+.gradle/
+.gradle-wrapper/
+.idea/
+.vscode/
+build/
+logs/
+out/
+target/
+.spotless-cache/
+*.iml
+*.ipr
+*.iws
+.env
+.env.local
+hs_err_pid*
+replay_pid*

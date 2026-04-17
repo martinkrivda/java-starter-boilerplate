@@ -1,0 +1,39 @@
+persistence:
+  enabled: true
+  vendor: h2
+
+datasources:
+  default:
+    url: jdbc:h2:mem:starter-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+    dialect: H2
+
+flyway:
+  datasources:
+    default:
+      enabled: true
+      baseline-on-migrate: true
+      clean-disabled: false
+      locations:
+        - classpath:db/migration/common
+        - classpath:db/migration/h2
+
+jpa:
+  default:
+    entity-scan:
+      packages:
+        - com.example.javastarterboilerplate.infrastructure.persistence
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        show_sql: false
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+
+storage:
+  s3:
+    enabled: false

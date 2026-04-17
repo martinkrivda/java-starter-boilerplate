@@ -1,0 +1,59 @@
+micronaut:
+  application:
+    name: java-starter-boilerplate
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: ${METRICS_PROMETHEUS_ENABLED:true}
+  router:
+    static-resources:
+      swagger:
+        enabled: false
+
+endpoints:
+  all:
+    sensitive: false
+  health:
+    enabled: false
+  metrics:
+    enabled: false
+  prometheus:
+    enabled: true
+    sensitive: false
+
+app:
+  api:
+    prefix: ${APP_API_PREFIX:/rest/v1}
+  info:
+    name: java-starter-boilerplate
+    version: ${APP_VERSION:@projectVersion@}
+    description: ${APP_DESCRIPTION:Micronaut starter for document sealing and signing services}
+  docs:
+    enabled: ${APP_DOCS_ENABLED:true}
+    title: ${APP_DOCS_TITLE:java-starter-boilerplate API reference}
+    spec-resource-path: ${APP_DOCS_SPEC_RESOURCE_PATH:META-INF/swagger/java-starter-boilerplate-@projectVersion@.yml}
+    open-api-version: ${APP_DOCS_OPENAPI_VERSION:3.1.1}
+    scalar-script-url: ${APP_DOCS_SCALAR_SCRIPT_URL:https://cdn.jsdelivr.net/npm/@scalar/api-reference}
+
+persistence:
+  enabled: ${PERSISTENCE_ENABLED:false}
+  vendor: ${PERSISTENCE_VENDOR:none}
+
+storage:
+  s3:
+    enabled: ${STORAGE_S3_ENABLED:false}
+    endpoint: ${STORAGE_S3_ENDPOINT:http://localhost:9000}
+    region: ${STORAGE_S3_REGION:eu-central-1}
+    bucket: ${STORAGE_S3_BUCKET:starter-documents}
+    path-style-access: ${STORAGE_S3_PATH_STYLE_ACCESS:true}
+    access-key: ${STORAGE_S3_ACCESS_KEY:minioadmin}
+    secret-key: ${STORAGE_S3_SECRET_KEY:minioadmin}
+
+document:
+  pdfbox:
+    enabled: ${PDFBOX_ENABLED:true}
+    roadmap-note: Scratch files and sealing workflows will be added later
+  dss:
+    enabled: ${DSS_ENABLED:true}
+    roadmap-note: PAdES signing and validation workflows will be added later

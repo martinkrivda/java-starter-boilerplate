@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: broken
+paths:
+  /broken:
+    get:
+      summary: missing closing sequence: [1, 2

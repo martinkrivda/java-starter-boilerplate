@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/api-response.json",
+  "title": "ApiResponse Envelope",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/SuccessResponse"
+    },
+    {
+      "$ref": "#/$defs/ErrorResponse"
+    }
+  ],
+  "$defs": {
+    "ResponseMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requestId",
+        "timestamp"
+      ],
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "FieldError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "pointer": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ProblemDetails": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "title",
+        "status",
+        "instance"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 400,
+          "maximum": 599
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^E[0-9]{4,}$"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FieldError"
+          }
+        }
+      }
+    },
+    "SuccessResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "success",
+        "data",
+        "error",
+        "meta"
+      ],
+      "properties": {
+        "success": {
+          "const": true
+        },
+        "data": {},
+        "error": {
+          "type": "null"
+        },
+        "meta": {
+          "$ref": "#/$defs/ResponseMeta"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "success",
+        "data",
+        "error",
+        "meta"
+      ],
+      "properties": {
+        "success": {
+          "const": false
+        },
+        "data": {
+          "type": "null"
+        },
+        "error": {
+          "$ref": "#/$defs/ProblemDetails"
+        },
+        "meta": {
+          "$ref": "#/$defs/ResponseMeta"
+        }
+      }
+    }
+  }
+}
