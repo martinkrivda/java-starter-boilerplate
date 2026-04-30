@@ -1,22 +1,55 @@
+# Operating system files
 .DS_Store
+
+# Local environment and secrets
+.env
+.env.local
+
+# Build output
+build/
+out/
+target/
+logs/
+
+# Gradle
 .gradle/
 .gradle-wrapper/
+
+# Spotless
+.spotless-cache/
+
+# IntelliJ IDEA
 .idea/*
 !.idea/codeStyles/
 !.idea/codeStyles/**
 !.idea/inspectionProfiles/
 !.idea/inspectionProfiles/**
 !.idea/watcherTasks.xml
-.vscode/
-build/
-logs/
-out/
-target/
-.spotless-cache/
 *.iml
 *.ipr
 *.iws
-.env
-.env.local
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# JVM crash logs
 hs_err_pid*
 replay_pid*
