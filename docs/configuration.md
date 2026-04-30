@@ -4,7 +4,7 @@ The application uses Micronaut environment-specific YAML files.
 
 Flyway is the single schema authority. Hibernate auto-DDL is disabled, so schema changes belong in migrations, not in entity-side generation.
 
-The project is targeted and verified against Java SE Development Kit 25.0.2.
+The project is targeted and verified against Java SE Development Kit 25.x.
 
 ## Profiles
 

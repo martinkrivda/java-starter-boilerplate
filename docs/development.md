@@ -4,7 +4,7 @@
 
 Preferred local runtime:
 
-- Java SE Development Kit 25.0.2
+- Java SE Development Kit 25.x
 
 Common commands:
 
@@ -62,13 +62,19 @@ This runs:
 make docker-format
 ```
 
-### 4. Build the executable JAR
+### 4. Check dependency updates
+
+```bash
+make dependency-updates
+```
+
+### 5. Build the executable JAR
 
 ```bash
 make docker-jar
 ```
 
-### 5. Run the CLI from the built artifact
+### 6. Run the CLI from the built artifact
 
 ```bash
 java -jar build/libs/java-starter-boilerplate-<version>-all.jar help

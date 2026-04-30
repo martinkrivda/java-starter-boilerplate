@@ -14,10 +14,12 @@ google-java-format = "1.35.0"
 checkstyle = "12.1.2"
 archunit = "1.4.2"
 jackson-dataformat-yaml = "2.19.2"
+versions-plugin = "0.53.0"
 
 [plugins]
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-gradle-plugin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }
 
 [libraries]
 aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws-sdk" }

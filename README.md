@@ -68,7 +68,7 @@ More detail is in [docs/architecture.md](docs/architecture.md).
 
 Requirements:
 
-- Java SE Development Kit 25.0.2
+- Java SE Development Kit 25.x
 - Docker optional
 
 Recommended IDE:
@@ -89,6 +89,7 @@ make doctor
 make run
 make check
 make format
+make dependency-updates
 make jar
 ```
 
@@ -184,7 +185,7 @@ make docker-format
 make docker-jar
 ```
 
-This workflow uses an `eclipse-temurin:25-jdk` container, mounts the repository into `/workspace`, and runs Gradle inside the container. It is the recommended path when the host machine does not have Java SE Development Kit 25.0.2 installed.
+This workflow uses an `eclipse-temurin:25-jdk` container, mounts the repository into `/workspace`, and runs Gradle inside the container. It is the recommended path when the host machine does not have Java SE Development Kit 25.x installed.
 
 If you want to run the application container itself instead of Gradle tasks, use:
 

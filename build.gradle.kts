@@ -8,6 +8,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 plugins {
     alias(libs.plugins.micronaut.application)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.versions)
     checkstyle
     jacoco
 }

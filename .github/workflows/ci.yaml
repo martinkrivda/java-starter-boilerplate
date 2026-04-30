@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: "25.0.2"
+          java-version: "25"
 
       - name: Make wrapper executable
         run: chmod +x ./gradlew

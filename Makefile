@@ -1,12 +1,12 @@
 SHELL := /bin/sh
 GRADLE := ./gradlew
-JAVA_REQUIRED := 25.0.2
+JAVA_REQUIRED_MAJOR := 25
 APP_JAR := build/libs/java-starter-boilerplate-$(shell sed -n 's/^projectVersion=//p' gradle.properties)-all.jar
 DOCKER_GRADLE_IMAGE := eclipse-temurin:25-jdk
 DOCKER_GRADLE_CMD := docker run --rm -v "$(CURDIR):/workspace" -w /workspace $(DOCKER_GRADLE_IMAGE) bash -lc 'apt-get update >/dev/null && apt-get install -y --no-install-recommends curl unzip >/dev/null && $(GRADLE) --no-daemon
 DOCKER_GRADLE_END := '
 
-.PHONY: help doctor run run-postgresql run-sqlserver test check format format-check jar cli-help cli-version cli-env docker-build compose-up compose-down compose-logs docker-test docker-check docker-format docker-jar docker-clean clean clean-deep reset-workspace
+.PHONY: help doctor run run-postgresql run-sqlserver test check format format-check dependency-updates jar cli-help cli-version cli-env docker-build compose-up compose-down compose-logs docker-test docker-check docker-format docker-jar docker-clean clean clean-deep reset-workspace
 
 help:
 	@printf "Common targets:\n"
@@ -17,6 +17,7 @@ help:
 	@printf "  make test            Run tests\n"
 	@printf "  make check           Run checks including coverage and formatter validation\n"
 	@printf "  make format          Apply Spotless formatting\n"
+	@printf "  make dependency-updates Show available Gradle dependency updates\n"
 	@printf "  make jar             Build the executable fat JAR\n"
 	@printf "  make docker-check    Run checks in Docker without local Java\n"
 	@printf "  make docker-format   Run formatter in Docker without local Java\n"
@@ -29,12 +30,12 @@ help:
 	@printf "  make compose-down    Stop Docker Compose services\n"
 
 doctor:
-	@java -version 2>&1 | grep "$(JAVA_REQUIRED)" >/dev/null || { \
-		printf "Expected Java SE Development Kit %s.\n" "$(JAVA_REQUIRED)"; \
+	@java -version 2>&1 | grep 'version "$(JAVA_REQUIRED_MAJOR)\.' >/dev/null || { \
+		printf "Expected Java SE Development Kit %s.x.\n" "$(JAVA_REQUIRED_MAJOR)"; \
 		java -version; \
 		exit 1; \
 	}
-	@printf "Java runtime matches %s.\n" "$(JAVA_REQUIRED)"
+	@printf "Java runtime matches major version %s.\n" "$(JAVA_REQUIRED_MAJOR)"
 
 run:
 	$(GRADLE) run
@@ -56,6 +57,9 @@ format:
 
 format-check:
 	$(GRADLE) spotlessCheck
+
+dependency-updates:
+	$(GRADLE) --no-parallel dependencyUpdates
 
 jar:
 	$(GRADLE) clean fatJar
