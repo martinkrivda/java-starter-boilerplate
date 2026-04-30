@@ -2,9 +2,9 @@ package com.example.javastarterboilerplate.domain.storage;
 
 public interface ObjectStorage {
 
-    StoredObject download(String key);
+  StoredObject download(String key);
 
-    StoredObject upload(StoredObjectUpload upload);
+  StoredObject upload(StoredObjectUpload upload);
 
-    void delete(String key);
+  void delete(String key);
 }

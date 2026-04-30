@@ -1,0 +1,44 @@
+# Build outputs
+build/
+out/
+target/
+.gradle/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE and local files
+.idea/
+.vscode/
+*.iml
+*.log
+.DS_Store
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+*kubeconfig*
+**/kubeconfig
+**/.kube/**
+
+# Generated or bulky artifacts
+coverage/
+reports/
+node_modules/
+dist/
+
+# Runtime Codex state if project-local CODEX_HOME is used
+.codex/auth.json
+.codex/history.jsonl
+.codex/log/
+.codex/sessions/
+.codex/state/
+.codex/*.db
+.codex/*.sqlite
+.codex/*.sqlite3

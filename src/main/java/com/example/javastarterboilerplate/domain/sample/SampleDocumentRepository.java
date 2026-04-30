@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public interface SampleDocumentRepository {
 
-    List<SampleDocument> findAll();
+  List<SampleDocument> findAll();
 
-    Optional<SampleDocument> findById(UUID id);
+  Optional<SampleDocument> findById(UUID id);
 
-    SampleDocument save(SampleDocument sampleDocument);
+  SampleDocument save(SampleDocument sampleDocument);
 }

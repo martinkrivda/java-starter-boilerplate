@@ -8,14 +8,14 @@ import jakarta.inject.Singleton;
 @Singleton
 public class GracefulShutdownListener {
 
-    private final ApplicationShutdownState applicationShutdownState;
+  private final ApplicationShutdownState applicationShutdownState;
 
-    public GracefulShutdownListener(ApplicationShutdownState applicationShutdownState) {
-        this.applicationShutdownState = applicationShutdownState;
-    }
+  public GracefulShutdownListener(ApplicationShutdownState applicationShutdownState) {
+    this.applicationShutdownState = applicationShutdownState;
+  }
 
-    @EventListener
-    public void onShutdown(ShutdownEvent event) {
-        applicationShutdownState.beginShutdown();
-    }
+  @EventListener
+  public void onShutdown(ShutdownEvent event) {
+    applicationShutdownState.beginShutdown();
+  }
 }

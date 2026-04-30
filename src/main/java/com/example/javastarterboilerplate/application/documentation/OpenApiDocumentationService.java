@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import jakarta.inject.Singleton;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -13,23 +12,24 @@ import java.util.Map;
 @Singleton
 public class OpenApiDocumentationService {
 
-    private static final TypeReference<Map<String, Object>> DOCUMENT_TYPE = new TypeReference<>() {
-    };
+  private static final TypeReference<Map<String, Object>> DOCUMENT_TYPE = new TypeReference<>() {};
+  private static final String JSON_DOCUMENT_PATH = "/doc";
+  private static final String YAML_DOCUMENT_PATH = "/doc/openapi.yaml";
 
-    private final OpenApiDocumentationProperties properties;
-    private final ObjectMapper jsonMapper;
-    private final YAMLMapper yamlMapper;
+  private final OpenApiDocumentationProperties properties;
+  private final ObjectMapper jsonMapper;
+  private final YAMLMapper yamlMapper;
 
-    private volatile OpenApiDocument cachedDocument;
+  private volatile OpenApiDocument cachedDocument;
 
-    public OpenApiDocumentationService(OpenApiDocumentationProperties properties) {
-        this.properties = properties;
-        this.jsonMapper = new ObjectMapper();
-        this.yamlMapper = new YAMLMapper();
-    }
+  public OpenApiDocumentationService(OpenApiDocumentationProperties properties) {
+    this.properties = properties;
+    this.jsonMapper = new ObjectMapper();
+    this.yamlMapper = new YAMLMapper();
+  }
 
-    public String referenceHtml() {
-        return """
+  public String referenceHtml() {
+    return """
                 <!doctype html>
                 <html lang="en">
                 <head>
@@ -85,9 +85,8 @@ public class OpenApiDocumentationService {
                   <div id="scalar-reference"></div>
                   <script src="%s"></script>
                   <script>
-                    const basePath = window.location.pathname.replace(/\\/$/, '');
-                    const jsonUrl = `${basePath}/openapi.json`;
-                    const yamlUrl = `${basePath}/openapi.yaml`;
+                    const jsonUrl = '%s';
+                    const yamlUrl = '%s';
                     document.getElementById('json-link').href = jsonUrl;
                     document.getElementById('yaml-link').href = yamlUrl;
                     document.getElementById('yaml-download-link').href = `${yamlUrl}/download`;
@@ -100,40 +99,46 @@ public class OpenApiDocumentationService {
                   </script>
                 </body>
                 </html>
-                """.formatted(properties.getTitle(), properties.getTitle(), properties.getScalarScriptUrl());
-    }
+                """
+        .formatted(
+            properties.getTitle(),
+            properties.getTitle(),
+            properties.getScalarScriptUrl(),
+            JSON_DOCUMENT_PATH,
+            YAML_DOCUMENT_PATH);
+  }
 
-    public String openApiJson() {
-        return document().json();
-    }
+  public String openApiJson() {
+    return document().json();
+  }
 
-    public String openApiYaml() {
-        return document().yaml();
-    }
+  public String openApiYaml() {
+    return document().yaml();
+  }
 
-    private synchronized OpenApiDocument document() {
-        if (cachedDocument == null) {
-            cachedDocument = loadDocument();
-        }
-        return cachedDocument;
+  private synchronized OpenApiDocument document() {
+    if (cachedDocument == null) {
+      cachedDocument = loadDocument();
     }
+    return cachedDocument;
+  }
 
-    private OpenApiDocument loadDocument() {
-        try (InputStream inputStream = getClass().getClassLoader()
-                .getResourceAsStream(properties.getSpecResourcePath())) {
-            if (inputStream == null) {
-                throw new IllegalStateException(
-                        "Generated OpenAPI resource not found: " + properties.getSpecResourcePath());
-            }
-            Map<String, Object> specification = yamlMapper.readValue(inputStream, DOCUMENT_TYPE);
-            specification.put("openapi", properties.getOpenApiVersion());
-            return new OpenApiDocument(jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(specification),
-                    yamlMapper.writeValueAsString(specification));
-        } catch (IOException exception) {
-            throw new IllegalStateException("Failed to load generated OpenAPI resource", exception);
-        }
+  private OpenApiDocument loadDocument() {
+    try (InputStream inputStream =
+        getClass().getClassLoader().getResourceAsStream(properties.getSpecResourcePath())) {
+      if (inputStream == null) {
+        throw new IllegalStateException(
+            "Generated OpenAPI resource not found: " + properties.getSpecResourcePath());
+      }
+      Map<String, Object> specification = yamlMapper.readValue(inputStream, DOCUMENT_TYPE);
+      specification.put("openapi", properties.getOpenApiVersion());
+      return new OpenApiDocument(
+          jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(specification),
+          yamlMapper.writeValueAsString(specification));
+    } catch (IOException exception) {
+      throw new IllegalStateException("Failed to load generated OpenAPI resource", exception);
     }
+  }
 
-    private record OpenApiDocument(String json, String yaml) {
-    }
+  private record OpenApiDocument(String json, String yaml) {}
 }

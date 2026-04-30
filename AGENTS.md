@@ -13,6 +13,14 @@ This repository is a production-ready Micronaut starter for a future document se
 - Keep `domain` free of Micronaut, JPA and cloud SDK concerns.
 - Do not add business logic outside the intended layer.
 
+## Java Runtime
+
+- Target Java version is Oracle JDK 25 LTS.
+- Use Gradle Java toolchains with `languageVersion = 25`.
+- Do not use Java preview features unless explicitly requested.
+- Prefer stable Java 25 language features only.
+- Keep code compatible with production JVM execution, not IDE-only behavior.
+
 ## Coding Conventions
 
 - Prefer small files and small classes.
@@ -21,6 +29,7 @@ This repository is a production-ready Micronaut starter for a future document se
 - Keep abstractions minimal and justified.
 - Avoid dead classes, speculative interfaces and unused extension points.
 - Add comments only when they materially improve clarity.
+- Follow Micronaut framework conventions for controllers, configuration properties, dependency injection, validation and environment-specific configuration.
 
 ## Testing Rules
 
@@ -33,13 +42,27 @@ This repository is a production-ready Micronaut starter for a future document se
 
 - Prefer explicit configuration keys.
 - Use profile-based YAML only where it improves clarity.
+- Use the `.yaml` extension for YAML files. Do not introduce new `.yml` files.
 - Keep PostgreSQL and SQL Server configuration easy to switch through Micronaut environments.
 - Use environment variables for deploy-time secrets and infrastructure values.
+
+## REST API Rules
+
+- Public REST API endpoints must use the `/rest/v1` prefix.
+- Keep documentation endpoints outside the versioned REST API unless explicitly required.
+- `/reference` should remain the documentation UI endpoint.
+- `/doc` should return the OpenAPI JSON definition.
+- Do not put business logic in controllers.
+- Controllers must remain thin and return the standard `ApiResponse<T>` envelope for JSON REST API responses.
+- Keep response structure consistent: successful JSON REST responses use `success`, `data`, `error` and `meta`; errors stay centralized through the global RFC 9457-style handler.
+- After every REST endpoint change, update the OpenAPI annotations and verify the generated Swagger/OpenAPI document used by `/reference` and `/doc`.
+- Keep `/reference`, `/doc`, `/doc/openapi.json` and `/doc/openapi.yaml` aligned with the generated Micronaut OpenAPI document.
 
 ## Documentation Rules
 
 - Update `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, or `docs/` whenever behavior, public API, infrastructure, or configuration changes.
 - Document new architectural decisions close to the code or in `docs/`.
+- Update API documentation whenever REST behavior, routes, request bodies or response shapes change.
 
 ## Dependency Management
 

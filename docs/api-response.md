@@ -58,7 +58,7 @@ Implementation notes:
 Intentional exceptions:
 
 - Binary or streamed success responses may stay outside the envelope.
-- `/doc/openapi.json` and `/doc/openapi.yaml` stay raw so they remain valid OpenAPI artifacts.
+- `/doc`, `/doc/openapi.json` and `/doc/openapi.yaml` stay raw so they remain valid OpenAPI artifacts.
 - `/metrics` stays raw (`text/plain`) because Prometheus scraping requires text exposition format.
 
 Configured defaults:

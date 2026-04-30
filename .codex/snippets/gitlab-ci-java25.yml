@@ -1,0 +1,13 @@
+stages:
+  - verify
+
+verify:
+  stage: verify
+  image: container-registry.oracle.com/java/jdk:25
+  script:
+    - ./gradlew clean check
+  cache:
+    key: gradle
+    paths:
+      - .gradle/caches
+      - .gradle/wrapper

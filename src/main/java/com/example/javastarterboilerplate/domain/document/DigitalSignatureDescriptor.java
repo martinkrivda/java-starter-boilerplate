@@ -1,4 +1,3 @@
 package com.example.javastarterboilerplate.domain.document;
 
-public record DigitalSignatureDescriptor(String provider, String detail) {
-}
+public record DigitalSignatureDescriptor(String provider, String detail) {}

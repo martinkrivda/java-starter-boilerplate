@@ -1,7 +1,12 @@
 .DS_Store
 .gradle/
 .gradle-wrapper/
-.idea/
+.idea/*
+!.idea/codeStyles/
+!.idea/codeStyles/**
+!.idea/inspectionProfiles/
+!.idea/inspectionProfiles/**
+!.idea/watcherTasks.xml
 .vscode/
 build/
 logs/

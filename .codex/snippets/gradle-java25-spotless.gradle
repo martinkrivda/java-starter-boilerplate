@@ -1,0 +1,56 @@
+// Example Gradle snippet for Java 25 LTS + Spotless + Jacoco.
+// Adapt plugin versions to your version catalog.
+
+plugins {
+    id "java"
+    id "jacoco"
+    id "checkstyle"
+    id "com.diffplug.spotless"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = "UTF-8"
+    options.compilerArgs.addAll(["-parameters", "-Xlint:all"])
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        targetExclude("build/generated/**", "build/generated-src/**")
+        googleJavaFormat("1.29.0")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format("misc") {
+        target(
+            "*.md",
+            "*.yml",
+            "*.yaml",
+            "*.toml",
+            ".gitignore",
+            ".codexignore",
+            "docs/**/*.md",
+            ".github/**/*.yml",
+            ".gitlab-ci.yml"
+        )
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+tasks.named("check") {
+    dependsOn("spotlessCheck")
+}

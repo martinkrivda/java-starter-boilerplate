@@ -1,3 +1,4 @@
+import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.jvm.tasks.Jar
@@ -7,6 +8,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 plugins {
     alias(libs.plugins.micronaut.application)
     alias(libs.plugins.spotless)
+    checkstyle
     jacoco
 }
 
@@ -93,6 +95,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation(libs.assertj)
+    testImplementation(libs.archunit.junit5)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -101,7 +104,10 @@ spotless {
     java {
         target("src/**/*.java")
         targetExclude(*spotlessIgnorePatterns.toTypedArray())
-        eclipse().configFile("config/spotless/eclipse-java-formatter.xml")
+        googleJavaFormat(
+            libs.versions.google.java.format
+                .get(),
+        )
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
@@ -136,6 +142,18 @@ spotless {
 
 jacoco {
     toolVersion = libs.versions.jacoco.get()
+}
+
+checkstyle {
+    toolVersion = libs.versions.checkstyle.get()
+    configDirectory.set(layout.projectDirectory.dir("config/checkstyle"))
+}
+
+tasks.withType<Checkstyle>().configureEach {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 tasks.processResources {

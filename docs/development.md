@@ -19,6 +19,8 @@ make jar
 After starting the service locally, API documentation is available at:
 
 ```text
+http://localhost:8080/
+http://localhost:8080/reference
 http://localhost:8080/doc
 http://localhost:8080/doc/openapi.json
 http://localhost:8080/doc/openapi.yaml
@@ -48,8 +50,10 @@ make docker-check
 This runs:
 
 - tests
+- Checkstyle validation
+- ArchUnit architecture tests
 - Jacoco coverage verification
-- Spotless validation
+- Spotless validation with `google-java-format` for Java sources
 - fat JAR packaging
 
 ### 3. Apply formatting

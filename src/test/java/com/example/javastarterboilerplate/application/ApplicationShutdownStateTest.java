@@ -1,19 +1,19 @@
 package com.example.javastarterboilerplate.application;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class ApplicationShutdownStateTest {
 
-    @Test
-    void marksApplicationAsShuttingDown() {
-        ApplicationShutdownState state = new ApplicationShutdownState();
+  @Test
+  void marksApplicationAsShuttingDown() {
+    ApplicationShutdownState state = new ApplicationShutdownState();
 
-        assertThat(state.isShuttingDown()).isFalse();
+    assertThat(state.isShuttingDown()).isFalse();
 
-        state.beginShutdown();
+    state.beginShutdown();
 
-        assertThat(state.isShuttingDown()).isTrue();
-    }
+    assertThat(state.isShuttingDown()).isTrue();
+  }
 }

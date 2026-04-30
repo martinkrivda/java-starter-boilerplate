@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Project-friendly Codex launcher.
+# It does not override CODEX_HOME, so your normal authentication and user-level
+# configuration remain intact. Project settings come from .codex/config.toml when
+# the repository is trusted.
+
+MODEL="${CODEX_MODEL:-gpt-5.5}"
+exec codex --model "$MODEL" "$@"

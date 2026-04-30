@@ -2,7 +2,7 @@ package com.example.javastarterboilerplate.domain.document;
 
 public interface DigitalSignatureService {
 
-    DigitalSignatureDescriptor describe();
+  DigitalSignatureDescriptor describe();
 
-    DigitalSignaturePreparationResult prepare(byte[] documentBytes, String fileName);
+  DigitalSignaturePreparationResult prepare(byte[] documentBytes, String fileName);
 }

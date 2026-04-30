@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "$#" -eq 0 ]]; then
+  echo "Usage: .codex/bin/check-rules -- <command> [args...]" >&2
+  echo "Example: .codex/bin/check-rules -- kubectl get pods" >&2
+  exit 2
+fi
+
+codex execpolicy check --pretty --rules .codex/rules/default.rules "$@"

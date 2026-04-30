@@ -2,7 +2,7 @@ package com.example.javastarterboilerplate.domain.document;
 
 public interface PdfDocumentService {
 
-    PdfDocumentDescriptor describe();
+  PdfDocumentDescriptor describe();
 
-    PdfDocumentMetadata inspect(byte[] documentBytes);
+  PdfDocumentMetadata inspect(byte[] documentBytes);
 }

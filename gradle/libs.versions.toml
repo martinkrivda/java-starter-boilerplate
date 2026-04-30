@@ -10,6 +10,9 @@ h2 = "2.3.232"
 assertj = "3.27.3"
 jacoco = "0.8.13"
 spotless = "7.2.1"
+google-java-format = "1.35.0"
+checkstyle = "12.1.2"
+archunit = "1.4.1"
 jackson-dataformat-yaml = "2.19.2"
 
 [plugins]
@@ -25,3 +28,4 @@ janino = { module = "org.codehaus.janino:janino", version.ref = "janino" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson-dataformat-yaml" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }

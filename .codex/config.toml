@@ -1,0 +1,137 @@
+# Project-scoped Codex configuration for a Java 25 LTS Micronaut microservice.
+# Codex loads this file only when the repository is trusted.
+
+################################################################################
+# Model selection
+################################################################################
+
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_provider = "openai"
+
+# GPT-5 family controls.
+model_reasoning_effort = "high"
+plan_mode_reasoning_effort = "high"
+model_verbosity = "medium"
+
+# Use live search for current docs when Codex has web search available.
+web_search = "live"
+
+################################################################################
+# Safety defaults
+################################################################################
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# Keep repository guidance available without making AGENTS.md too large.
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = [
+  "CONTRIBUTING.md",
+  "docs/ARCHITECTURE.md",
+  "docs/CODE_STYLE.md",
+  "docs/API.md"
+]
+
+[sandbox_workspace_write]
+network_access = false
+exclude_slash_tmp = false
+exclude_tmpdir_env_var = false
+
+[shell_environment_policy]
+inherit = "core"
+exclude = [
+  "*TOKEN*",
+  "*SECRET*",
+  "*PASSWORD*",
+  "*PASS*",
+  "*PRIVATE*",
+  "*_KEY",
+  "*_KEY_*",
+  "*_CREDENTIALS",
+  "AWS_*",
+  "AZURE_*",
+  "GCP_*",
+  "GOOGLE_*",
+  "KUBECONFIG",
+  "DOCKER_*",
+  "GITHUB_TOKEN",
+  "GITLAB_TOKEN",
+  "OPENAI_API_KEY"
+]
+
+[features]
+multi_agent = true
+shell_snapshot = true
+undo = true
+
+################################################################################
+# Subagents
+################################################################################
+
+[agents]
+max_threads = 6
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[agents.java_micronaut]
+description = "Implement Java 25 LTS Micronaut features, REST APIs, OpenAPI and tests."
+config_file = "agents/java-micronaut.toml"
+nickname_candidates = ["micronaut", "java", "service"]
+
+[agents.architect]
+description = "Review package boundaries, layering, API shape and starter scope."
+config_file = "agents/architect.toml"
+nickname_candidates = ["architect", "layers"]
+
+[agents.reviewer]
+description = "Review diffs for correctness, maintainability, tests, security and docs."
+config_file = "agents/reviewer.toml"
+nickname_candidates = ["reviewer", "critic"]
+
+[agents.devops]
+description = "Inspect Kubernetes, ArgoCD, GitHub/GitLab CI and deployment manifests safely."
+config_file = "agents/devops.toml"
+nickname_candidates = ["devops", "platform"]
+
+[agents.db_hibernate]
+description = "Work on Hibernate, JPA mappings, migrations and PostgreSQL/SQL Server persistence."
+config_file = "agents/db-hibernate.toml"
+nickname_candidates = ["hibernate", "db"]
+
+[agents.api_openapi]
+description = "Check REST API contracts, /rest/v1 prefixing, /doc JSON and /reference UI behavior."
+config_file = "agents/api-openapi.toml"
+nickname_candidates = ["openapi", "api"]
+
+[agents.test_engineer]
+description = "Create and improve unit, integration, contract, architecture and coverage tests."
+config_file = "agents/test-engineer.toml"
+nickname_candidates = ["tests", "qa"]
+
+################################################################################
+# Profiles
+################################################################################
+
+[profiles.fast]
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+model_verbosity = "low"
+
+[profiles.deep]
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+model_verbosity = "high"
+
+[profiles.review]
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "high"
+model_verbosity = "medium"
+sandbox_mode = "read-only"
+
+[profiles.devops_readonly]
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"

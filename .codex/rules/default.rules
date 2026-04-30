@@ -1,0 +1,143 @@
+# Codex execution policy rules for this repository.
+# Rules are Starlark and apply to commands requested outside the sandbox.
+# Keep these conservative: allow read-only inspection, prompt for build/deploy/write operations,
+# forbid obviously destructive shell operations.
+
+# -----------------------------------------------------------------------------
+# Read-only repository inspection
+# -----------------------------------------------------------------------------
+
+prefix_rule(
+    pattern = ["git", "status"],
+    decision = "allow",
+    justification = "Read-only Git status is safe.",
+    match = ["git status", "git status --short"],
+)
+
+prefix_rule(
+    pattern = ["git", "diff"],
+    decision = "allow",
+    justification = "Read-only Git diff is safe.",
+    match = ["git diff", "git diff --stat", "git diff -- src/main/java/App.java"],
+)
+
+prefix_rule(
+    pattern = ["git", "log"],
+    decision = "allow",
+    justification = "Read-only Git log is safe.",
+    match = ["git log --oneline", "git log --stat"],
+)
+
+prefix_rule(
+    pattern = ["git", "show"],
+    decision = "allow",
+    justification = "Read-only Git show is safe.",
+    match = ["git show HEAD", "git show --stat HEAD"],
+)
+
+prefix_rule(
+    pattern = ["rg"],
+    decision = "allow",
+    justification = "Ripgrep is safe for repository search.",
+    match = ["rg OpenAPI", "rg --files"],
+)
+
+prefix_rule(
+    pattern = ["grep"],
+    decision = "allow",
+    justification = "Grep is safe for repository search.",
+    match = ["grep -R OpenAPI src"],
+)
+
+prefix_rule(
+    pattern = ["find"],
+    decision = "allow",
+    justification = "Find is safe for repository inspection.",
+    match = ["find . -maxdepth 2 -type f"],
+)
+
+prefix_rule(
+    pattern = [["ls", "pwd", "cat", "head", "tail", "sed", "awk", "wc", "file", "tree"]],
+    decision = "allow",
+    justification = "Common read-only shell inspection commands are safe.",
+    match = ["ls", "pwd", "cat README.md", "sed -n 1,80p build.gradle", "wc -l README.md"],
+)
+
+# -----------------------------------------------------------------------------
+# Build and test commands: useful but may run arbitrary project code.
+# -----------------------------------------------------------------------------
+
+prefix_rule(
+    pattern = ["./gradlew"],
+    decision = "prompt",
+    justification = "Gradle tasks may execute repository code; approve intentionally.",
+    match = ["./gradlew test", "./gradlew clean check", "./gradlew spotlessApply"],
+)
+
+prefix_rule(
+    pattern = ["gradle"],
+    decision = "prompt",
+    justification = "Gradle tasks may execute repository code; approve intentionally.",
+    match = ["gradle test", "gradle clean check"],
+)
+
+prefix_rule(
+    pattern = ["mvn"],
+    decision = "prompt",
+    justification = "Maven tasks may execute repository code; approve intentionally.",
+    match = ["mvn test", "mvn verify"],
+)
+
+# -----------------------------------------------------------------------------
+# Git write or network operations require approval.
+# -----------------------------------------------------------------------------
+
+prefix_rule(
+    pattern = ["git", ["add", "commit", "checkout", "switch", "branch", "merge", "rebase", "reset", "clean", "stash", "restore", "mv", "rm", "tag", "push", "pull", "fetch"]],
+    decision = "prompt",
+    justification = "Git write/network operations require approval.",
+    match = ["git add src", "git commit -m update", "git push", "git reset --hard HEAD"],
+)
+
+prefix_rule(
+    pattern = [["gh", "glab"]],
+    decision = "prompt",
+    justification = "GitHub/GitLab CLI may access remote state or create changes; approve intentionally.",
+    match = ["gh pr view 1", "glab mr list"],
+)
+
+# -----------------------------------------------------------------------------
+# Containers, clusters, delivery and infrastructure require approval.
+# -----------------------------------------------------------------------------
+
+prefix_rule(
+    pattern = [["docker", "podman", "kubectl", "argocd", "helm", "kustomize", "terraform", "tofu"]],
+    decision = "prompt",
+    justification = "Container, Kubernetes, ArgoCD and infrastructure commands require approval.",
+    match = ["kubectl get pods", "argocd app diff my-app", "helm template chart", "docker build ."],
+)
+
+# -----------------------------------------------------------------------------
+# Destructive or privilege-changing commands are forbidden by default.
+# -----------------------------------------------------------------------------
+
+prefix_rule(
+    pattern = ["rm", "-rf", "/"],
+    decision = "forbidden",
+    justification = "Never recursively remove the filesystem root.",
+    match = ["rm -rf /"],
+)
+
+prefix_rule(
+    pattern = [["sudo", "su"]],
+    decision = "forbidden",
+    justification = "Privilege escalation is not allowed from Codex in this repository.",
+    match = ["sudo rm -rf build", "su root"],
+)
+
+prefix_rule(
+    pattern = [["chmod", "chown"]],
+    decision = "prompt",
+    justification = "Permission/ownership changes require approval.",
+    match = ["chmod +x .codex/bin/verify", "chown -R user ."],
+)

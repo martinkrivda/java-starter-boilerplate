@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectTasksOptions">
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="spotlessApply" />
+      <option name="autoSaveEditedFile" value="true" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Formats project files with the Gradle Spotless task after save." />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="java" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Spotless formatOnSave" />
+      <option name="output" value="" />
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PROJECT_DIR$/gradlew" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="spotlessApply" />
+      <option name="autoSaveEditedFile" value="true" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Formats Gradle build scripts with the Gradle Spotless task after save." />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="kts" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Spotless formatOnSave Gradle Kotlin" />
+      <option name="output" value="" />
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PROJECT_DIR$/gradlew" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="spotlessApply" />
+      <option name="autoSaveEditedFile" value="true" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Formats YAML files with the Gradle Spotless task after save." />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="yaml" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Spotless formatOnSave YAML" />
+      <option name="output" value="" />
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PROJECT_DIR$/gradlew" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="spotlessApply" />
+      <option name="autoSaveEditedFile" value="true" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Formats Markdown files with the Gradle Spotless task after save." />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="md" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Spotless formatOnSave Markdown" />
+      <option name="output" value="" />
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PROJECT_DIR$/gradlew" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="spotlessApply" />
+      <option name="autoSaveEditedFile" value="true" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" value="Formats properties files with the Gradle Spotless task after save." />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="properties" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Spotless formatOnSave Properties" />
+      <option name="output" value="" />
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="$PROJECT_DIR$/gradlew" />
+      <option name="runOnExternalChanges" value="false" />
+      <option name="scopeName" value="Project Files" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$PROJECT_DIR$" />
+      <envs />
+    </TaskOptions>
+  </component>
+</project>

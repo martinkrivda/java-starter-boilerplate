@@ -23,7 +23,9 @@
 - Do not introduce business workflows for sealing or signing in this starter phase.
 - Add or update tests for every behavior change.
 - Keep production coverage at 100% unless there is a documented bootstrap-only exclusion.
+- Follow Google Java Style for Java sources.
 - Run Spotless before opening a PR when touching formatted sources.
+- Keep Spotless, Checkstyle, ArchUnit and Jacoco green in `./gradlew check`.
 - Prefer IntelliJ IDEA for the smoothest Java 25, Micronaut and Gradle experience in this repository.
 
 ## Documentation Rule

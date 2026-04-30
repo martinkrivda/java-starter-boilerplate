@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -x "./gradlew" ]]; then
+  ./gradlew test
+elif command -v gradle >/dev/null 2>&1; then
+  gradle test
+elif [[ -x "./mvnw" ]]; then
+  ./mvnw test
+elif command -v mvn >/dev/null 2>&1; then
+  mvn test
+else
+  echo "No Gradle or Maven wrapper found." >&2
+  exit 1
+fi

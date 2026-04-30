@@ -14,19 +14,23 @@ import jakarta.inject.Inject;
 @Controller("/metrics")
 public class MetricsController {
 
-    private static final MediaType PROMETHEUS_MEDIA_TYPE = MediaType.of("text/plain; version=0.0.4; charset=utf-8");
+  private static final MediaType PROMETHEUS_MEDIA_TYPE =
+      MediaType.of("text/plain; version=0.0.4; charset=utf-8");
 
-    private final PrometheusEndpoint prometheusEndpoint;
+  private final PrometheusEndpoint prometheusEndpoint;
 
-    @Inject
-    public MetricsController(PrometheusEndpoint prometheusEndpoint) {
-        this.prometheusEndpoint = prometheusEndpoint;
-    }
+  @Inject
+  public MetricsController(PrometheusEndpoint prometheusEndpoint) {
+    this.prometheusEndpoint = prometheusEndpoint;
+  }
 
-    @Get(produces = "text/plain; version=0.0.4; charset=utf-8")
-    @Operation(summary = "Prometheus metrics scrape endpoint", description = "Exposes runtime and application metrics in Prometheus text format.")
-    public HttpResponse<String> scrape() {
-        return HttpResponse.ok(prometheusEndpoint.scrape()).contentType(PROMETHEUS_MEDIA_TYPE)
-                .header(HttpHeaders.CACHE_CONTROL, "no-store");
-    }
+  @Get(produces = "text/plain; version=0.0.4; charset=utf-8")
+  @Operation(
+      summary = "Prometheus metrics scrape endpoint",
+      description = "Exposes runtime and application metrics in Prometheus text format.")
+  public HttpResponse<String> scrape() {
+    return HttpResponse.ok(prometheusEndpoint.scrape())
+        .contentType(PROMETHEUS_MEDIA_TYPE)
+        .header(HttpHeaders.CACHE_CONTROL, "no-store");
+  }
 }

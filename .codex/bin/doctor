@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "== Java =="
+java -version 2>&1 || true
+
+echo
+echo "== Gradle =="
+if [[ -x "./gradlew" ]]; then
+  ./gradlew -version
+elif command -v gradle >/dev/null 2>&1; then
+  gradle -version
+else
+  echo "Gradle not found"
+fi
+
+echo
+echo "== Codex =="
+command -v codex >/dev/null 2>&1 && codex --version || echo "Codex CLI not found"
+
+echo
+echo "== Repository expectations =="
+echo "- Java toolchain should target 25"
+echo "- Business REST API prefix should be /rest/v1"
+echo "- /doc should return OpenAPI JSON"
+echo "- /reference should render docs UI"

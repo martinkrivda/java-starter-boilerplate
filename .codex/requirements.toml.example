@@ -1,0 +1,11 @@
+# Example only: managed/admin-enforced Codex requirements are usually owned by
+# workspace administrators, not normal repository contributors.
+# Copy/adapt only if your organization uses managed Codex configuration.
+
+allowed_models = ["gpt-5.5", "gpt-5.4", "gpt-5.4-mini"]
+allowed_sandbox_modes = ["read-only", "workspace-write"]
+allowed_web_search_modes = ["disabled", "cached", "live"]
+
+[features]
+multi_agent = true
+shell_tool = true

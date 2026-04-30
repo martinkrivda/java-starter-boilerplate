@@ -81,10 +81,10 @@ The application serves generated API documentation from build output:
 
 Default routes:
 
+- `/reference`
 - `/doc`
-- `/doc/openapi.json`
+- `/doc/openapi.json` as a compatibility alias for `/doc`
 - `/doc/openapi.yaml`
-- `/reference` as a compatibility alias for `/doc`
 
 ## Monitoring (Prometheus)
 

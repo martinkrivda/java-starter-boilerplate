@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Optional isolated Codex home launcher.
+# Use this only when you intentionally want repository-local Codex state.
+# You will need to authenticate this CODEX_HOME separately.
+
+export CODEX_HOME="$(pwd)/.codex"
+MODEL="${CODEX_MODEL:-gpt-5.5}"
+exec codex --model "$MODEL" "$@"

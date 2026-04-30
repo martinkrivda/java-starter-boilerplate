@@ -78,7 +78,7 @@ Recommended IDE:
 Formatter:
 
 - Spotless is the repository formatter.
-- Java sources use the Eclipse JDT formatter through Spotless.
+- Java sources follow Google Java Style and use `google-java-format` through Spotless.
 - The formatter ignore file is `.spotlessignore`.
 
 Common commands:
@@ -125,7 +125,7 @@ Canonical request correlation header:
 Compatibility note:
 
 - The service also echoes `X-Correlation-Id` with the same value during the transition to the new standard.
-- Raw OpenAPI artifacts at `/doc/openapi.json` and `/doc/openapi.yaml` stay outside the envelope because they must remain valid OpenAPI documents.
+- Raw OpenAPI artifacts at `/doc`, `/doc/openapi.json` and `/doc/openapi.yaml` stay outside the envelope because they must remain valid OpenAPI documents.
 
 Reference material:
 
@@ -136,15 +136,19 @@ Default JSON API route prefix is `/rest/v1`, configured through `app.api.prefix`
 
 API documentation routes:
 
-- `/doc` renders the Scalar-based API reference UI.
-- `/doc/openapi.json` returns the generated OpenAPI document as JSON.
+- `/reference` renders the Scalar-based API reference UI.
+- `/doc` returns the generated OpenAPI document as JSON.
+- `/doc/openapi.json` returns the same generated OpenAPI document as JSON.
 - `/doc/openapi.yaml` returns the generated OpenAPI document as YAML.
 - `/doc/openapi.yaml/download` forces YAML download.
-- `/reference` is kept as a compatibility alias for `/doc`.
 
 Monitoring route:
 
 - `/metrics` exposes Prometheus metrics in text format (`text/plain; version=0.0.4`).
+
+Service discovery route:
+
+- `/` returns basic service metadata and links to operational endpoints.
 
 Operational shutdown behavior:
 
@@ -249,6 +253,7 @@ docker compose up -d app
 ```
 
 Coverage reports are generated in `build/reports/jacoco/test/html/index.html`. The build is configured to fail when line coverage for production code drops below 100%, excluding only the bootstrap `Application` entry point.
+The `check` lifecycle also enforces Spotless, Checkstyle and ArchUnit architecture tests.
 
 ## Build Executable JAR
 
@@ -292,14 +297,16 @@ OpenAPI documentation is generated at compile time with Micronaut OpenAPI and se
 
 Routes:
 
+- `GET /`
 - `GET /doc`
 - `GET /doc/openapi.json`
 - `GET /doc/openapi.json/download`
 - `GET /doc/openapi.yaml`
 - `GET /doc/openapi.yaml/download`
+- `GET /reference`
 - `GET /metrics`
 
-The runtime endpoints normalize the exposed document to OpenAPI `3.1.1` and provide a Scalar reference UI backed by the generated JSON definition.
+The runtime endpoints normalize the exposed document to OpenAPI `3.1.1` and provide a Scalar reference UI at `/reference` backed by the generated JSON definition at `/doc`.
 Prometheus-compatible runtime metrics are exposed at `/metrics`.
 
 ## Persistence

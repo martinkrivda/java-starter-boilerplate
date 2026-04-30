@@ -1,0 +1,11 @@
+# Repository-local Codex runtime state when using .codex/bin/codex-project-home.
+# Do not commit auth/session/log databases.
+
+auth.json
+history.jsonl
+log/
+sessions/
+state/
+*.db
+*.sqlite
+*.sqlite3
