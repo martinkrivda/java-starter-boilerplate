@@ -1,6 +1,6 @@
 [versions]
 micronaut-platform = "4.10.11"
-micronaut-gradle-plugin = "4.6.0"
+micronaut-gradle-plugin = "4.6.2"
 aws-sdk = "2.31.74"
 dss = "6.3"
 pdfbox = "3.0.7"
