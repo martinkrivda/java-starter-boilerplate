@@ -128,6 +128,7 @@ spotless {
             ".editorconfig",
             ".dockerignore",
             ".env.example",
+            ".github/**/*.yaml",
             "Makefile",
             "docker-compose.yaml",
             "docs/**/*.md",

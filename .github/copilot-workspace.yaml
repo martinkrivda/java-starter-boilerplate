@@ -1,0 +1,32 @@
+version: 1
+project:
+  name: java-starter-boilerplate
+  summary: Production-ready Micronaut starter for future document sealing and signing services.
+  primary_language: java
+  java_version: "25"
+
+instructions:
+  - Read and follow AGENTS.md before making changes.
+  - Keep package boundaries between api, application, domain, infrastructure, config and observability.
+  - Keep domain free of Micronaut, JPA and cloud SDK dependencies.
+  - Keep controllers thin and business orchestration in application services.
+  - Return JSON REST API responses in the ApiResponse envelope unless the endpoint is explicitly documented as a raw artifact or operational discovery endpoint.
+  - Update OpenAPI annotations and documentation when REST routes, request bodies or response shapes change.
+  - Keep /reference, /doc, /doc/openapi.json and /doc/openapi.yaml aligned with the generated Micronaut OpenAPI document.
+  - Use .yaml for YAML files; do not add new .yml files.
+  - Use Google Java Style through Spotless and google-java-format.
+  - Do not add real PDF sealing, real PDF signing, signature validation, HSM integration, certificate workflows, queues or orchestration-heavy process managers in this starter phase.
+
+quality_gates:
+  format: ./gradlew spotlessApply
+  verify: ./gradlew check
+  ci: ./gradlew --no-daemon clean check fatJar
+
+documentation:
+  required_for_changes:
+    - public API behavior
+    - REST routes
+    - OpenAPI or documentation endpoints
+    - infrastructure or configuration
+    - architecture decisions
+    - version changes
