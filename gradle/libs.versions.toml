@@ -14,7 +14,7 @@ google-java-format = "1.35.0"
 checkstyle = "12.1.2"
 archunit = "1.4.2"
 jackson-dataformat-yaml = "2.19.2"
-versions-plugin = "0.53.0"
+versions-plugin = "0.54.0"
 
 [plugins]
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut-gradle-plugin" }
