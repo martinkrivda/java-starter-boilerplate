@@ -2,7 +2,7 @@
 micronaut-platform = "4.10.11"
 micronaut-gradle-plugin = "4.6.2"
 aws-sdk = "2.43.1"
-dss = "6.3"
+dss = "6.4"
 pdfbox = "3.0.7"
 logstash-logback-encoder = "8.1"
 janino = "3.1.12"
