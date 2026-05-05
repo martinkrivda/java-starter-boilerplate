@@ -2,6 +2,15 @@ package com.example.javastarterboilerplate.infrastructure.storage;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
+/**
+ * Configuration properties for the S3/MinIO object storage adapter, bound to the {@code storage.s3}
+ * prefix.
+ *
+ * <p>Disabled by default ({@code storage.s3.enabled=false}). Enable via environment variable {@code
+ * STORAGE_S3_ENABLED=true}. For local development with Docker Compose MinIO, the default endpoint
+ * ({@code http://localhost:9000}) and credentials ({@code minioadmin}) apply. Override all values
+ * for staging and production environments using environment variables.
+ */
 @ConfigurationProperties("storage.s3")
 public class S3StorageProperties {
 
