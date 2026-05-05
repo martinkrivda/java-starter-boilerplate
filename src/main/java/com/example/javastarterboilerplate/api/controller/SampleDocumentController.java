@@ -19,6 +19,15 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST controller for the sample document CRUD resource.
+ *
+ * <p>Provides list, get-by-id, and create operations backed by {@code SampleDocumentService}. This
+ * controller exists as a boilerplate demonstration of the layered architecture and the {@link
+ * ApiResponse} envelope. It does not perform any PDF or signature processing.
+ *
+ * <p>Route prefix is configured through {@code app.api.prefix}, defaulting to {@code /rest/v1}.
+ */
 @Tag(name = "Sample Documents")
 @Controller("${app.api.prefix}/sample-documents")
 public class SampleDocumentController {

@@ -10,6 +10,12 @@ import io.micronaut.http.annotation.Get;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Exposes application version and integration readiness metadata via the REST API.
+ *
+ * <p>Useful for ops tooling that needs to confirm which version is deployed and which integrations
+ * (storage, PDF, signatures) are enabled in the current environment.
+ */
 @Tag(name = "Operations")
 @Controller("${app.api.prefix}/info")
 public class InfoController {

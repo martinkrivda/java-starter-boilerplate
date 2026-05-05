@@ -11,6 +11,24 @@ import io.micronaut.http.annotation.Get;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Serves the generated OpenAPI document and the Scalar API reference UI.
+ *
+ * <p>Active only when {@code app.docs.enabled} is {@code true}, the default. All specification
+ * responses set {@code Cache-Control: no-store} so that spec changes are always reflected
+ * immediately.
+ *
+ * <p>Endpoints:
+ *
+ * <ul>
+ *   <li>{@code GET /doc} - OpenAPI document as JSON
+ *   <li>{@code GET /doc/openapi.json} - same
+ *   <li>{@code GET /doc/openapi.json/download} - JSON with download disposition
+ *   <li>{@code GET /doc/openapi.yaml} - OpenAPI document as YAML
+ *   <li>{@code GET /doc/openapi.yaml/download} - YAML with download disposition
+ *   <li>{@code GET /reference} - Scalar-rendered HTML reference UI
+ * </ul>
+ */
 @Hidden
 @Controller
 @Requires(property = "app.docs.enabled", notEquals = "false", defaultValue = "true")
