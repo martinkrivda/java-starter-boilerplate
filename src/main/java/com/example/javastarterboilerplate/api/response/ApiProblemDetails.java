@@ -4,6 +4,22 @@ import io.micronaut.serde.annotation.Serdeable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
+/**
+ * RFC 9457-compatible problem details embedded in the {@link ApiResponse} error envelope.
+ *
+ * <p>All error responses populate this record. The {@code type} URI identifies the error category
+ * and is stable across releases, making it safe for clients to use programmatically. The {@code
+ * code} field provides an alternative stable machine-readable identifier.
+ *
+ * @param type absolute URI identifying the problem type; stable across releases
+ * @param title short, human-readable problem title matching the type
+ * @param status HTTP status code mirrored from the response
+ * @param detail safe human-readable description of the specific occurrence
+ * @param instance request path without query string, pointing to the failing resource
+ * @param code stable internal error code, e.g. {@code "E1003"}
+ * @param requestId correlation identifier from {@code X-Request-Id}
+ * @param errors field-level validation errors; present only for validation failures
+ */
 @Serdeable
 @Schema(
     name = "ProblemDetails",
