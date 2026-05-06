@@ -13,7 +13,7 @@ spotless = "8.4.0"
 google-java-format = "1.35.0"
 checkstyle = "12.1.2"
 archunit = "1.4.2"
-jackson-dataformat-yaml = "2.19.2"
+jackson-dataformat-yaml = "2.21.3"
 versions-plugin = "0.53.0"
 
 [plugins]
