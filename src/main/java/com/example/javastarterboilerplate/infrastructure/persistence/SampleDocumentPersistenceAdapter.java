@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * JPA-backed implementation of {@link
+ * com.example.javastarterboilerplate.domain.sample.SampleDocumentRepository}, active when {@code
+ * persistence.enabled=true}.
+ *
+ * <p>Bridges the domain model ({@link
+ * com.example.javastarterboilerplate.domain.sample.SampleDocument}) and the JPA entity ({@link
+ * SampleDocumentEntity}). Results are ordered by {@code created_at_epoch_millis} descending so that
+ * the newest records are returned first.
+ */
 @Singleton
 @Requires(property = "persistence.enabled", value = "true")
 public class SampleDocumentPersistenceAdapter implements SampleDocumentRepository {

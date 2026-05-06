@@ -2,6 +2,15 @@ package com.example.javastarterboilerplate.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
+/**
+ * Configuration properties for the OpenAPI documentation endpoints, bound to the {@code app.docs}
+ * prefix.
+ *
+ * <p>Controls whether the documentation endpoints are active, the page title shown in the Scalar
+ * UI, the classpath path to the generated YAML spec, and the CDN URL for the Scalar JavaScript
+ * bundle. Override {@code APP_DOCS_SCALAR_SCRIPT_URL} in environments that require a self-hosted or
+ * versioned CDN URL.
+ */
 @ConfigurationProperties("app.docs")
 public class OpenApiDocumentationProperties {
 

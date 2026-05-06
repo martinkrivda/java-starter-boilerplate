@@ -8,6 +8,15 @@ import eu.europa.esig.dss.model.DSSDocument;
 import eu.europa.esig.dss.model.InMemoryDocument;
 import jakarta.inject.Singleton;
 
+/**
+ * Infrastructure adapter implementing {@link
+ * com.example.javastarterboilerplate.domain.document.DigitalSignatureService} using the EU Digital
+ * Signature Service library.
+ *
+ * <p>The current implementation is a wiring placeholder. The {@link #prepare} method wraps the
+ * document in a DSS {@code InMemoryDocument} and returns metadata, but does not produce a signed
+ * document. PAdES/CAdES signing workflows will replace this stub when the feature is in scope.
+ */
 @Singleton
 public class DssDigitalSignatureService implements DigitalSignatureService {
 

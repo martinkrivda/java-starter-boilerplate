@@ -2,6 +2,12 @@ package com.example.javastarterboilerplate.infrastructure.document;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
+/**
+ * Configuration properties for DSS document-signature integration, bound to {@code document.dss}.
+ *
+ * <p>The integration is currently a readiness placeholder for future PAdES/CAdES workflows. The
+ * roadmap note is surfaced in operational metadata to make that status explicit.
+ */
 @ConfigurationProperties("document.dss")
 public class DssProperties {
 

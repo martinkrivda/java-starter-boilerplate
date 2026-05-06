@@ -15,6 +15,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+/**
+ * Global Micronaut error handler that maps exceptions and HTTP status errors to RFC 9457 problem
+ * details wrapped in {@link ApiResponse}.
+ *
+ * <p>All application errors flow through this handler. Controllers throw exceptions or return 4xx
+ * status codes and let this handler normalize the response.
+ *
+ * <p>Error code assignments:
+ *
+ * <ul>
+ *   <li>E1001 - malformed request body (400)
+ *   <li>E1002 - unsupported media type (415)
+ *   <li>E1003 - constraint validation failure (422)
+ *   <li>E1004 - resource not found (404)
+ *   <li>E1000 - generic 4xx request error
+ *   <li>E3001 - internal server error (500)
+ * </ul>
+ */
 @Controller
 public class GlobalErrorHandler {
 

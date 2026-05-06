@@ -93,6 +93,27 @@ make dependency-updates
 make jar
 ```
 
+## Javadoc
+
+Generate the Javadoc API documentation with:
+
+```bash
+make docs
+# or equivalently:
+make javadoc
+# or directly:
+./gradlew javadoc
+```
+
+The generated documentation is placed in `build/docs/javadoc/`. Open
+`build/docs/javadoc/index.html` in a browser to browse the API.
+
+To remove the generated output:
+
+```bash
+make clean-docs
+```
+
 ## API Response Standard
 
 Application JSON endpoints use a standard response envelope:

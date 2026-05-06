@@ -10,6 +10,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 
+/**
+ * Prometheus metrics scrape endpoint.
+ *
+ * <p>Aggregates Micrometer metrics from the Prometheus registry and exposes them at {@code GET
+ * /metrics} in the standard Prometheus text exposition format. This endpoint is intended for
+ * scraping by a Prometheus server or a compatible agent.
+ */
 @Tag(name = "Monitoring")
 @Controller("/metrics")
 public class MetricsController {
