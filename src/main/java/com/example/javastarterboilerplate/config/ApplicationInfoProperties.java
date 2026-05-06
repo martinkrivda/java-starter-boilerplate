@@ -2,6 +2,13 @@ package com.example.javastarterboilerplate.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
+/**
+ * Configuration properties for application identity metadata, bound to the {@code app.info} prefix.
+ *
+ * <p>These values are injected from {@code application.yaml}, populated at build time from {@code
+ * gradle.properties} via the {@code @projectVersion@} token, and surfaced through {@code GET
+ * /rest/v1/info} and health responses.
+ */
 @ConfigurationProperties("app.info")
 public class ApplicationInfoProperties {
 

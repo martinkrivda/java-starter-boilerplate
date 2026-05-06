@@ -17,6 +17,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Aggregates application metadata and integration readiness for operational endpoints.
+ *
+ * <p>Called by {@code InfoController} and {@code HealthController}. Reads configuration properties
+ * and queries integration adapters to produce a snapshot of the service state. Optional adapters
+ * such as {@code ObjectStorage} are represented as {@code Optional} to avoid bean wiring failures
+ * when the adapter is disabled.
+ */
 @Singleton
 public class ApplicationInfoService {
 
@@ -51,6 +59,11 @@ public class ApplicationInfoService {
     this.environment = environment;
   }
 
+  /**
+   * Returns a snapshot of application metadata and integration component statuses.
+   *
+   * @return application info with version, active environments and per-component status
+   */
   public ApplicationInfoResponse getInfo() {
     List<ApplicationComponentStatusResponse> integrations = new ArrayList<>();
     integrations.add(

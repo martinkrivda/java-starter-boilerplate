@@ -19,6 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides health, liveness and readiness endpoints used by Kubernetes probes and monitoring.
+ *
+ * <p>The full health response ({@code GET /health}) includes integration component statuses
+ * collected from {@code ApplicationInfoService}. The liveness probe ({@code GET /health/live})
+ * always returns UP unless the JVM has crashed. The readiness probe ({@code GET /health/ready})
+ * returns {@code not_ready} when the application is draining.
+ *
+ * <p>The drain endpoint ({@code POST /health/drain}) triggers a controlled shutdown signal without
+ * stopping the JVM, allowing Kubernetes to remove the pod from load balancer rotation before the
+ * actual termination.
+ */
 @Tag(name = "Health")
 @Controller("/health")
 public class HealthController {

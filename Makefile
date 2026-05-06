@@ -6,7 +6,7 @@ DOCKER_GRADLE_IMAGE := eclipse-temurin:25-jdk
 DOCKER_GRADLE_CMD := docker run --rm -v "$(CURDIR):/workspace" -w /workspace $(DOCKER_GRADLE_IMAGE) bash -lc 'apt-get update >/dev/null && apt-get install -y --no-install-recommends curl unzip >/dev/null && $(GRADLE) --no-daemon
 DOCKER_GRADLE_END := '
 
-.PHONY: help doctor run run-postgresql run-sqlserver test check format format-check dependency-updates jar cli-help cli-version cli-env docker-build compose-up compose-down compose-logs docker-test docker-check docker-format docker-jar docker-clean clean clean-deep reset-workspace
+.PHONY: help doctor run run-postgresql run-sqlserver test check format format-check dependency-updates jar cli-help cli-version cli-env docker-build compose-up compose-down compose-logs docker-test docker-check docker-format docker-jar docker-clean clean clean-deep reset-workspace docs javadoc clean-docs
 
 help:
 	@printf "Common targets:\n"
@@ -24,6 +24,9 @@ help:
 	@printf "  make docker-jar      Build the fat JAR in Docker without local Java\n"
 	@printf "  make docker-clean    Remove compose containers, volumes and pulled Docker images\n"
 	@printf "  make clean-deep      Remove local build and Gradle workspace artifacts\n"
+	@printf "  make docs            Generate Javadoc into build/docs/javadoc\n"
+	@printf "  make javadoc         Alias for make docs\n"
+	@printf "  make clean-docs      Remove generated Javadoc output\n"
 	@printf "  make reset-workspace Remove local artifacts and Docker resources created for this project\n"
 	@printf "  make cli-help        Print CLI help from the packaged application\n"
 	@printf "  make compose-up      Start local dependencies via Docker Compose\n"
@@ -102,6 +105,14 @@ clean:
 
 clean-deep:
 	rm -rf build logs .gradle .gradle-wrapper
+
+docs:
+	$(GRADLE) javadoc
+
+javadoc: docs
+
+clean-docs:
+	rm -rf build/docs
 
 docker-clean:
 	docker compose down --volumes --remove-orphans --rmi local

@@ -6,6 +6,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.UUID;
 
+/**
+ * JPA entity mapping the {@code sample_documents} table.
+ *
+ * <p>Stores creation time as epoch milliseconds rather than a database timestamp type to remain
+ * portable across H2, PostgreSQL and SQL Server without vendor-specific timestamp handling. The
+ * conversion to {@link java.time.Instant} is done in {@code SampleDocumentPersistenceAdapter}.
+ */
 @Entity
 @Table(name = "sample_documents")
 public class SampleDocumentEntity {

@@ -6,6 +6,13 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import java.io.PrintStream;
 
+/**
+ * Application entry point.
+ *
+ * <p>Delegates CLI argument parsing to {@code ApplicationCli}. If the resolved command is {@code
+ * serve}, or no arguments are given, the Micronaut runtime is started. Otherwise the process exits
+ * with the code determined by the CLI handler.
+ */
 @OpenAPIDefinition(
     info =
         @Info(

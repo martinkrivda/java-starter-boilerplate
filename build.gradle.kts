@@ -1,6 +1,7 @@
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.jvm.tasks.Jar
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
@@ -275,6 +276,16 @@ val fatJar by tasks.registering(Jar::class) {
 
 tasks.assemble {
     dependsOn(fatJar)
+}
+
+tasks.javadoc {
+    options.encoding = "UTF-8"
+    (options as StandardJavadocDocletOptions).apply {
+        charSet("UTF-8")
+        addBooleanOption("Xdoclint:none", true)
+        windowTitle = "${rootProject.name} $projectVersion"
+        docTitle = "${rootProject.name} $projectVersion"
+    }
 }
 
 tasks.check {
