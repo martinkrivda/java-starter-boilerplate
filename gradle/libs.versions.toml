@@ -1,7 +1,7 @@
 [versions]
 micronaut-platform = "4.10.11"
 micronaut-gradle-plugin = "4.6.2"
-aws-sdk = "2.43.1"
+aws-sdk = "2.44.0"
 dss = "6.3"
 pdfbox = "3.0.7"
 logstash-logback-encoder = "9.0"
@@ -13,7 +13,7 @@ spotless = "8.4.0"
 google-java-format = "1.35.0"
 checkstyle = "12.1.2"
 archunit = "1.4.2"
-jackson-dataformat-yaml = "2.19.2"
+jackson-dataformat-yaml = "2.21.3"
 versions-plugin = "0.53.0"
 
 [plugins]

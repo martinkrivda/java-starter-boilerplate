@@ -12,6 +12,15 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * In-memory implementation of {@link
+ * com.example.javastarterboilerplate.domain.sample.SampleDocumentRepository}, active when {@code
+ * persistence.enabled} is not {@code true}.
+ *
+ * <p>Uses a {@link java.util.concurrent.ConcurrentHashMap} as the backing store and seeds a single
+ * document on construction to enable immediate end-to-end testing without a database. Data is lost
+ * when the process exits; this implementation is not suitable for production use.
+ */
 @Singleton
 @Requires(property = "persistence.enabled", notEquals = "true", defaultValue = "false")
 public class InMemorySampleDocumentRepository implements SampleDocumentRepository {

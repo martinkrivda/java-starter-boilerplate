@@ -9,6 +9,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+/**
+ * Loads, transforms and serves the generated OpenAPI specification.
+ *
+ * <p>The spec is generated at compile time by the Micronaut OpenAPI annotation processor and placed
+ * at {@code META-INF/swagger/openapi.yaml} on the classpath. This service reads that resource once,
+ * normalizes the version field from configuration, and provides both JSON and YAML representations
+ * to {@code DocumentationController}.
+ *
+ * <p>The parsed document is cached after the first load to avoid repeated classpath reads.
+ */
 @Singleton
 public class OpenApiDocumentationService {
 
@@ -28,6 +38,11 @@ public class OpenApiDocumentationService {
     this.yamlMapper = new YAMLMapper();
   }
 
+  /**
+   * Returns the Scalar API reference HTML page with links to the JSON and YAML endpoints.
+   *
+   * @return complete HTML document; never {@code null}
+   */
   public String referenceHtml() {
     return """
                 <!doctype html>
@@ -108,10 +123,22 @@ public class OpenApiDocumentationService {
             YAML_DOCUMENT_PATH);
   }
 
+  /**
+   * Returns the OpenAPI document as a pretty-printed JSON string.
+   *
+   * @return JSON string; never {@code null}
+   * @throws IllegalStateException if the classpath resource is missing or unreadable
+   */
   public String openApiJson() {
     return document().json();
   }
 
+  /**
+   * Returns the OpenAPI document as a YAML string.
+   *
+   * @return YAML string; never {@code null}
+   * @throws IllegalStateException if the classpath resource is missing or unreadable
+   */
   public String openApiYaml() {
     return document().yaml();
   }

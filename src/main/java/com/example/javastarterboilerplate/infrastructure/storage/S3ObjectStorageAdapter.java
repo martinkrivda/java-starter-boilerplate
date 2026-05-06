@@ -14,6 +14,14 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+/**
+ * AWS SDK v2 implementation of {@link
+ * com.example.javastarterboilerplate.domain.storage.ObjectStorage}.
+ *
+ * <p>Requires a registered {@link software.amazon.awssdk.services.s3.S3Client} bean, i.e. {@code
+ * storage.s3.enabled=true}. All operations target the bucket configured in {@link
+ * S3StorageProperties}. Object keys are passed through without modification.
+ */
 @Singleton
 @Requires(bean = S3Client.class)
 public class S3ObjectStorageAdapter implements ObjectStorage {

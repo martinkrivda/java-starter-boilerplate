@@ -2,6 +2,12 @@ package com.example.javastarterboilerplate.infrastructure.document;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
+/**
+ * Configuration properties for PDFBox document processing, bound to {@code document.pdfbox}.
+ *
+ * <p>The current adapter supports document inspection. The roadmap note documents future
+ * large-document handling so operational endpoints can report the adapter status clearly.
+ */
 @ConfigurationProperties("document.pdfbox")
 public class PdfBoxProperties {
 

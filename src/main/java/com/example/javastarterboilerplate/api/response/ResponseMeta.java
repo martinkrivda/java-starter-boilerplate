@@ -4,6 +4,16 @@ import io.micronaut.serde.annotation.Serdeable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 
+/**
+ * Metadata attached to every {@link ApiResponse} envelope.
+ *
+ * <p>Allows clients to correlate responses with log entries and distributed traces using {@code
+ * requestId}, and to detect clock skew using {@code timestamp}.
+ *
+ * @param requestId correlation identifier propagated from the {@code X-Request-Id} header, or a
+ *     generated UUID if the header was absent
+ * @param timestamp server-side UTC timestamp at which the response was produced
+ */
 @Serdeable
 @Schema(name = "ResponseMeta", description = "Metadata attached to every JSON envelope response.")
 public record ResponseMeta(

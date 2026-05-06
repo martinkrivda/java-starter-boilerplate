@@ -9,6 +9,14 @@ import java.io.UncheckedIOException;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+/**
+ * Infrastructure adapter implementing {@link
+ * com.example.javastarterboilerplate.domain.document.PdfDocumentService} using Apache PDFBox.
+ *
+ * <p>Currently handles document inspection only. Future sealing and stamping operations will extend
+ * this adapter as the service scope grows. The adapter is always registered regardless of the
+ * {@code pdfbox.enabled} flag; the flag controls only the detail message in {@link #describe()}.
+ */
 @Singleton
 public class PdfBoxDocumentService implements PdfDocumentService {
 
@@ -27,6 +35,13 @@ public class PdfBoxDocumentService implements PdfDocumentService {
             : "PDFBox integration is disabled");
   }
 
+  /**
+   * Parses the given PDF bytes and extracts page count, encryption status and version.
+   *
+   * @param documentBytes raw PDF bytes; must not be {@code null}
+   * @return extracted metadata
+   * @throws java.io.UncheckedIOException if {@code documentBytes} is not a valid PDF
+   */
   @Override
   public PdfDocumentMetadata inspect(byte[] documentBytes) {
     try (PDDocument document = Loader.loadPDF(documentBytes)) {

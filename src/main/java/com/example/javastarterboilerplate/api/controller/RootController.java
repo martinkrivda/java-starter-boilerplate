@@ -9,6 +9,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 
+/**
+ * Root endpoint that returns a discoverable service index.
+ *
+ * <p>Returns basic metadata and a map of well-known endpoint paths. Useful as a starting point for
+ * service discovery without prior knowledge of the API structure.
+ */
 @Tag(name = "Operations")
 @Controller("/")
 public class RootController {
