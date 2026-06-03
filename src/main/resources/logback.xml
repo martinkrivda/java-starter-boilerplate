@@ -3,19 +3,64 @@
     <property name="APP_ENV" value="${MICRONAUT_ENVIRONMENTS:-default}" />
     <property name="LOG_DIR" value="${LOG_DIR:-logs}" />
     <property name="LOG_LEVEL" value="${LOG_LEVEL:-INFO}" />
-    <property name="FILE_LOGGING_ENABLED" value="${FILE_LOGGING_ENABLED:-false}" />
+    <property name="LOG_TARGET" value="${LOG_TARGET:-stdout}" />
+    <property name="LOG_FORMAT" value="${LOG_FORMAT:-text}" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_DIR}/application.log}" />
+    <property name="LOG_ERROR_FILE" value="${LOG_ERROR_FILE:-${LOG_DIR}/error.log}" />
     <property name="LOG_MAX_HISTORY" value="${LOG_MAX_HISTORY:-12}" />
     <property name="LOG_TOTAL_SIZE_CAP" value="${LOG_TOTAL_SIZE_CAP:-1GB}" />
     <property name="LOG_MAX_FILE_SIZE" value="${LOG_MAX_FILE_SIZE:-50MB}" />
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- ── Console: stdout + text ─────────────────────────────────────── -->
+    <appender name="STDOUT_TEXT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
         <encoder>
             <pattern>ts=%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} level=%-5level app=${APP_NAME} env=${APP_ENV} thread=%thread logger=%logger{36} requestId=%X{requestId:-na} msg="%msg"%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/application.log</file>
+    <!-- ── Console: stdout + json ─────────────────────────────────────── -->
+    <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"${APP_NAME}","environment":"${APP_ENV}"}</customFields>
+        </encoder>
+    </appender>
+
+    <!-- ── Console: stderr + text ─────────────────────────────────────── -->
+    <appender name="STDERR_TEXT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <encoder>
+            <pattern>ts=%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} level=%-5level app=${APP_NAME} env=${APP_ENV} thread=%thread logger=%logger{36} requestId=%X{requestId:-na} msg="%msg"%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ── Console: stderr + json ─────────────────────────────────────── -->
+    <appender name="STDERR_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"${APP_NAME}","environment":"${APP_ENV}"}</customFields>
+        </encoder>
+    </appender>
+
+    <!-- ── File: application.log + text ──────────────────────────────── -->
+    <appender name="APP_FILE_TEXT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>ts=%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} level=%-5level app=${APP_NAME} env=${APP_ENV} thread=%thread logger=%logger{36} requestId=%X{requestId:-na} msg="%msg"%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archive/application.%d{yyyy-ww}.%i.log.gz</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ── File: application.log + json ──────────────────────────────── -->
+    <appender name="APP_FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"service":"${APP_NAME}","environment":"${APP_ENV}","stream":"application"}</customFields>
         </encoder>
@@ -28,8 +73,27 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/error.log</file>
+    <!-- ── File: error.log + text ────────────────────────────────────── -->
+    <appender name="ERROR_FILE_TEXT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ERROR_FILE}</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>ts=%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} level=%-5level app=${APP_NAME} env=${APP_ENV} thread=%thread logger=%logger{36} requestId=%X{requestId:-na} msg="%msg"%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archive/error.%d{yyyy-ww}.%i.log.gz</fileNamePattern>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ── File: error.log + json ────────────────────────────────────── -->
+    <appender name="ERROR_FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ERROR_FILE}</file>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
@@ -47,18 +111,56 @@
 
     <logger name="com.example.javastarterboilerplate" level="${LOG_LEVEL}" />
 
-    <if condition='property("FILE_LOGGING_ENABLED").equalsIgnoreCase("true")'>
+    <!-- ── Activate root based on LOG_TARGET + LOG_FORMAT ────────────── -->
+    <if condition='property("LOG_TARGET").equalsIgnoreCase("stderr")'>
         <then>
-            <root level="${LOG_LEVEL}">
-                <appender-ref ref="CONSOLE" />
-                <appender-ref ref="APP_FILE" />
-                <appender-ref ref="ERROR_FILE" />
-            </root>
+            <if condition='property("LOG_FORMAT").equalsIgnoreCase("json")'>
+                <then>
+                    <root level="${LOG_LEVEL}">
+                        <appender-ref ref="STDERR_JSON" />
+                    </root>
+                </then>
+                <else>
+                    <root level="${LOG_LEVEL}">
+                        <appender-ref ref="STDERR_TEXT" />
+                    </root>
+                </else>
+            </if>
         </then>
         <else>
-            <root level="${LOG_LEVEL}">
-                <appender-ref ref="CONSOLE" />
-            </root>
+            <if condition='property("LOG_TARGET").equalsIgnoreCase("file")'>
+                <then>
+                    <if condition='property("LOG_FORMAT").equalsIgnoreCase("json")'>
+                        <then>
+                            <root level="${LOG_LEVEL}">
+                                <appender-ref ref="APP_FILE_JSON" />
+                                <appender-ref ref="ERROR_FILE_JSON" />
+                            </root>
+                        </then>
+                        <else>
+                            <root level="${LOG_LEVEL}">
+                                <appender-ref ref="APP_FILE_TEXT" />
+                                <appender-ref ref="ERROR_FILE_TEXT" />
+                            </root>
+                        </else>
+                    </if>
+                </then>
+                <else>
+                    <!-- Default: stdout (covers "stdout" and any unrecognised value) -->
+                    <if condition='property("LOG_FORMAT").equalsIgnoreCase("json")'>
+                        <then>
+                            <root level="${LOG_LEVEL}">
+                                <appender-ref ref="STDOUT_JSON" />
+                            </root>
+                        </then>
+                        <else>
+                            <root level="${LOG_LEVEL}">
+                                <appender-ref ref="STDOUT_TEXT" />
+                            </root>
+                        </else>
+                    </if>
+                </else>
+            </if>
         </else>
     </if>
 </configuration>
