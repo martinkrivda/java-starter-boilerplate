@@ -6,13 +6,20 @@ The canonical application version is stored in `gradle.properties` under `projec
 When releasing or preparing a new version:
 
 1. Update `projectVersion` in `gradle.properties`.
-2. Add a matching entry here.
-3. Reflect externally visible changes in `README.md` or `docs/` when needed.
+2. Keep the value compatible with Semantic Versioning 2.0.0.
+3. Add a matching entry here.
+4. Reflect externally visible changes in `README.md` or `docs/` when needed.
 
 ## [Unreleased]
 
 ### Changed
 
+- Replaced `FILE_LOGGING_ENABLED` with `LOG_TARGET=stdout|stderr|file` (default: `stdout`) for configurable log routing.
+- Added `LOG_FORMAT=json|text` (default: `text`) to switch between structured JSON and human-readable logfmt output.
+- Added `LOG_FILE` and `LOG_ERROR_FILE` for custom file paths when `LOG_TARGET=file`.
+- Removed never-implemented `JSON_CONSOLE_LOGGING_ENABLED` variable.
+- Kubernetes ConfigMap now sets `LOG_TARGET=stdout` and `LOG_FORMAT=json` for container-native log collection.
+- Versioning guidance now documents Semantic Versioning 2.0.0, Conventional Commits and separate build metadata tracking.
 - Default application startup no longer creates a datasource automatically and now uses an in-memory sample repository until a persistence profile is explicitly enabled.
 - Docker Compose app profile now starts without PostgreSQL or MinIO by default so the boilerplate container can expose the API on its own.
 - Docker Compose now manages the `app` service without requiring a separate profile so `up` and `down` behave symmetrically for local runs.
