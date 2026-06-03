@@ -48,9 +48,23 @@ Important variables:
 
 ## Logging
 
-- Console logging is always on.
-- File logging is enabled with `FILE_LOGGING_ENABLED=true`.
-- Weekly rolling, retention and gzip compression are configured in `src/main/resources/logback.xml`.
+Logging is controlled by two environment variables:
+
+| Variable     | Default  | Values                     | Description                        |
+|--------------|----------|----------------------------|------------------------------------|
+| `LOG_TARGET` | `stdout` | `stdout`, `stderr`, `file` | Where to write logs                |
+| `LOG_FORMAT` | `text`   | `text`, `json`             | Output format                      |
+
+**stdout / stderr** — suitable for Kubernetes and any container runtime. Use
+`LOG_FORMAT=json` in production so collectors (Fluent Bit, Loki, ELK) can parse
+structured fields.
+
+**file** — writes to `LOG_FILE` (default `logs/application.log`) and
+`LOG_ERROR_FILE` (default `logs/error.log`, ERROR level only). Both files use
+weekly rolling with gzip compression configured via `LOG_MAX_FILE_SIZE`,
+`LOG_MAX_HISTORY`, and `LOG_TOTAL_SIZE_CAP`.
+
+Full configuration is in `src/main/resources/logback.xml`.
 
 ## API Response Envelope
 
@@ -99,3 +113,21 @@ For stack-level recommendations, see [monitoring.md](monitoring.md).
 
 The canonical project version lives in `gradle.properties` as `projectVersion`.
 `app.info.version` defaults to that value unless `APP_VERSION` is set at runtime.
+
+The project follows Semantic Versioning 2.0.0. Keep `projectVersion` as the release identity, for example `1.2.3`, `1.3.0-rc.1` or `0.1.0-SNAPSHOT` during unreleased development. Do not use CI build numbers as the main version number.
+
+Build traceability is configured separately:
+
+- `app.info.build-number` defaults to the Gradle build metadata token and can be overridden with `APP_BUILD_NUMBER`.
+- `app.info.build-commit` defaults to the Gradle build metadata token and can be overridden with `APP_BUILD_COMMIT`.
+- `app.info.build-timestamp` defaults to the Gradle build metadata token and can be overridden with `APP_BUILD_TIMESTAMP`.
+
+Set the `APP_BUILD_*` runtime overrides only when the deployment pipeline provides real values. Leaving them unset preserves the metadata embedded during the Gradle build.
+
+Gradle reads build metadata from common CI variables:
+
+- build number: `BUILD_NUMBER`, `GITHUB_RUN_NUMBER`, `CI_PIPELINE_IID`
+- commit SHA: `GIT_COMMIT`, `GITHUB_SHA`, `CI_COMMIT_SHA`
+- timestamp: `BUILD_TIMESTAMP`, `CI_COMMIT_TIMESTAMP`, or the current build time
+
+`GET /rest/v1/info` exposes the resolved values under `data.build`.
