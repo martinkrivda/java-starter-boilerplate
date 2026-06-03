@@ -18,5 +18,6 @@ data:
   STORAGE_S3_PATH_STYLE_ACCESS: "true"
   PDFBOX_ENABLED: "true"
   DSS_ENABLED: "true"
-  FILE_LOGGING_ENABLED: "false"
+  LOG_TARGET: "stdout"
+  LOG_FORMAT: "json"
   LOG_LEVEL: "INFO"
