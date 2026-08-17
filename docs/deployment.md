@@ -8,12 +8,24 @@ Build the image:
 docker build -t java-starter-boilerplate:latest .
 ```
 
+CI builds should pass traceability metadata into the image build:
+
+```bash
+docker build \
+  --build-arg APP_VERSION=0.1.0 \
+  --build-arg BUILD_NUMBER="${BUILD_NUMBER}" \
+  --build-arg GIT_COMMIT="${GIT_COMMIT}" \
+  --build-arg BUILD_TIMESTAMP="${BUILD_TIMESTAMP}" \
+  -t java-starter-boilerplate:0.1.0 .
+```
+
 The runtime image uses:
 
 - Eclipse Temurin JRE 25
 - `curl` for local health checks and shutdown draining hooks
 - non-root user
 - Micronaut `prod` environment by default
+- OCI labels for version, build number, source revision and build timestamp
 
 ## Docker Compose
 

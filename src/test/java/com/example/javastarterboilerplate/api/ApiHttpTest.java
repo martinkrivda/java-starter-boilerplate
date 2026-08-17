@@ -112,6 +112,7 @@ class ApiHttpTest {
 
     assertThat(data(envelope).get("name")).isEqualTo("java-starter-boilerplate");
     assertThat(data(envelope).get("activeDatabaseProfile")).isEqualTo("h2");
+    assertThat(data(envelope).get("build")).isInstanceOf(Map.class);
     assertThat(((List<?>) data(envelope).get("integrations"))).hasSize(3);
     assertMeta(envelope, response.getHeaders().get(RequestIdFilter.HEADER_NAME));
   }

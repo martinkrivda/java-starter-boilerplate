@@ -426,13 +426,50 @@ These include:
 
 ## Versioning And Changelog
 
-Write the canonical application version in `gradle.properties` under `projectVersion`.
+The project follows Semantic Versioning 2.0.0. The canonical application version is stored in `gradle.properties` under `projectVersion` and is reused by Gradle artifacts, generated OpenAPI metadata, Javadoc titles, runtime application info and JAR manifests.
 
-When the version changes:
+Use the SemVer form:
 
-- update `projectVersion`
-- add an entry to `CHANGELOG.md`
-- update docs if the release changes public behavior or operations
+```text
+MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
+```
+
+Examples:
+
+- `1.4.2`
+- `1.5.0-rc.1`
+- `2.0.0`
+- `0.1.0-SNAPSHOT` for unreleased development builds only
+
+Version increments:
+
+- `MAJOR`: incompatible public API, configuration, behavior or operational contract changes.
+- `MINOR`: backward-compatible functionality, endpoints, configuration or integration points.
+- `PATCH`: backward-compatible bug fixes, documentation corrections that affect operations, dependency or infrastructure fixes.
+- `PRERELEASE`: release candidates or snapshots before a final release, for example `1.2.0-rc.1` or `0.1.0-SNAPSHOT`.
+
+Commit messages should follow Conventional Commits:
+
+- `fix:` normally maps to a PATCH release.
+- `feat:` normally maps to a MINOR release.
+- `feat!:` or a `BREAKING CHANGE:` footer maps to a MAJOR release.
+- `docs:`, `test:`, `refactor:`, `chore:` and similar maintenance commits do not require a version bump unless they change public behavior, runtime operations or published artifacts.
+
+Build metadata is tracked separately from the canonical release version. This keeps SemVer ordering stable while still making each built artifact traceable. Gradle records:
+
+- `buildNumber` from `BUILD_NUMBER`, `GITHUB_RUN_NUMBER` or `CI_PIPELINE_IID`, defaulting to `local`.
+- `buildCommit` from `GIT_COMMIT`, `GITHUB_SHA` or `CI_COMMIT_SHA`, defaulting to `unknown`.
+- `buildTimestamp` from `BUILD_TIMESTAMP` or `CI_COMMIT_TIMESTAMP`, defaulting to the current build time in ISO-8601 UTC format.
+
+The values are exposed at `GET /rest/v1/info` under `data.build`, written to JAR manifest attributes (`Build-Number`, `Build-Commit`, `Build-Timestamp`), and can be overridden at runtime with `APP_BUILD_NUMBER`, `APP_BUILD_COMMIT` and `APP_BUILD_TIMESTAMP`. Set runtime overrides only when the deployment pipeline provides real values; otherwise keep the build-time metadata embedded in the artifact.
+
+Release checklist:
+
+- update `projectVersion` in `gradle.properties`
+- add a matching entry to `CHANGELOG.md`
+- create a Git tag matching the release version, for example `v1.2.0`
+- ensure build metadata points to the CI build number, commit SHA and UTC timestamp for the released artifact
+- update docs if the release changes public behavior, API contracts, configuration or operations
 
 ## What Is Placeholder
 

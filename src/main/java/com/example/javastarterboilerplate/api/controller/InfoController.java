@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * Exposes application version and integration readiness metadata via the REST API.
+ * Exposes application version, build metadata and integration readiness via the REST API.
  *
- * <p>Useful for ops tooling that needs to confirm which version is deployed and which integrations
- * (storage, PDF, signatures) are enabled in the current environment.
+ * <p>Useful for ops tooling that needs to confirm which version and build is deployed and which
+ * integrations (storage, PDF, signatures) are enabled in the current environment.
  */
 @Tag(name = "Operations")
 @Controller("${app.api.prefix}/info")
@@ -33,7 +33,8 @@ public class InfoController {
   @Operation(
       summary = "Read application metadata",
       description =
-          "Returns application version, active profiles and integration readiness placeholders.")
+          "Returns application version, build metadata, active profiles and integration readiness"
+              + " placeholders.")
   public ApiResponse<ApplicationInfoResponse> info(HttpRequest<?> request) {
     return responseFactory.success(request, applicationInfoService.getInfo());
   }

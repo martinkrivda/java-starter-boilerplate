@@ -13,8 +13,8 @@ paths:
       tags:
       - Operations
       summary: Read application metadata
-      description: "Returns application version, active profiles and integration readiness\
-        \ placeholders."
+      description: "Returns application version, build metadata, active profiles and\
+        \ integration readiness placeholders."
       operationId: info
       responses:
         "200":
@@ -128,6 +128,7 @@ components:
       required:
       - activeDatabaseProfile
       - activeEnvironments
+      - build
       - description
       - integrations
       - name
@@ -138,6 +139,8 @@ components:
           type: string
         version:
           type: string
+        build:
+          $ref: "#/components/schemas/ApplicationBuildInfoResponse"
         description:
           type: string
         activeDatabaseProfile:
@@ -150,6 +153,19 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ApplicationComponentStatusResponse"
+    ApplicationBuildInfoResponse:
+      required:
+      - commit
+      - number
+      - timestamp
+      type: object
+      properties:
+        number:
+          type: string
+        commit:
+          type: string
+        timestamp:
+          type: string
     CreateSampleDocumentRequest:
       required:
       - name

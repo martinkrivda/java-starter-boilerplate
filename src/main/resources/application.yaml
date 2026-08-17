@@ -28,6 +28,9 @@ app:
   info:
     name: java-starter-boilerplate
     version: ${APP_VERSION:@projectVersion@}
+    build-number: ${APP_BUILD_NUMBER:@buildNumber@}
+    build-commit: ${APP_BUILD_COMMIT:@buildCommit@}
+    build-timestamp: ${APP_BUILD_TIMESTAMP:@buildTimestamp@}
     description: ${APP_DESCRIPTION:Micronaut starter for document sealing and signing services}
   docs:
     enabled: ${APP_DOCS_ENABLED:true}

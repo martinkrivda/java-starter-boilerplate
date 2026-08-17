@@ -2,6 +2,7 @@ package com.example.javastarterboilerplate.contracts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.javastarterboilerplate.api.dto.ApplicationBuildInfoResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationComponentStatusResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationInfoResponse;
 import com.example.javastarterboilerplate.api.dto.CreateSampleDocumentRequest;
@@ -33,9 +34,11 @@ class RecordContractTest {
   void exposesRecordState() {
     ApplicationComponentStatusResponse component =
         new ApplicationComponentStatusResponse("storage", true, "ready");
+    ApplicationBuildInfoResponse build =
+        new ApplicationBuildInfoResponse("42", "abc123", "2026-05-07T10:15:30Z");
     ApplicationInfoResponse info =
         new ApplicationInfoResponse(
-            "starter", "1.0.0", "desc", "postgresql", List.of("dev"), List.of(component));
+            "starter", "1.0.0", build, "desc", "postgresql", List.of("dev"), List.of(component));
     CreateSampleDocumentRequest request = new CreateSampleDocumentRequest("name", "storage-key");
     HealthCheckResponse healthCheck =
         new HealthCheckResponse("database", "UP", 1L, "ready", Map.of("enabled", true));
@@ -78,6 +81,7 @@ class RecordContractTest {
             "object-key", "application/pdf", new byte[] {1, 2}, Map.of("source", "test"));
 
     assertThat(component.component()).isEqualTo("storage");
+    assertThat(build.number()).isEqualTo("42");
     assertThat(info.activeEnvironments()).containsExactly("dev");
     assertThat(request.storageKey()).isEqualTo("storage-key");
     assertThat(health.version()).isEqualTo("1.0.0");
