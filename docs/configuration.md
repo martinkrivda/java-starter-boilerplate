@@ -64,7 +64,34 @@ structured fields.
 weekly rolling with gzip compression configured via `LOG_MAX_FILE_SIZE`,
 `LOG_MAX_HISTORY`, and `LOG_TOTAL_SIZE_CAP`.
 
+Every log line (both `text` and `json` formats) carries these fields:
+
+| Field | Source |
+|-------|--------|
+| `service` / `app` | `APP_NAME` |
+| `version` | `APP_VERSION` (baked into the image at build time) |
+| `environment` | `MICRONAUT_ENVIRONMENTS` |
+| `host` | container `HOSTNAME` (the pod name in Kubernetes) |
+| `ip` | `POD_IP` (populated via the Kubernetes downward API `status.podIP`; the Helm chart sets this automatically) |
+| `level`, `message`, `logger`, `thread` | standard Logback/Logstash fields |
+| `requestId` | `X-Request-Id` / `X-Correlation-Id`, propagated via MDC by `RequestIdFilter` |
+
 Full configuration is in `src/main/resources/logback.xml`.
+
+## TLS
+
+| Variable | Default | Description |
+|----------|---------|--------------|
+| `TLS_ENABLED` | `false` | Enables native Micronaut SSL (PEM certificate) |
+| `TLS_CERT_PATH` | `/etc/tls/tls.crt` | Path to the PEM certificate |
+| `TLS_KEY_PATH` | `/etc/tls/tls.key` | Path to the PEM private key |
+
+Micronaut 4.x has no dual-protocol support, so enabling TLS switches the entire
+server — including `/healthz`, `/readyz` and `/metrics` — to HTTPS on the same
+port (`MICRONAUT_SERVER_PORT`, default `8080`). The default paths match a
+cert-manager-issued `Secret` (`tls.crt` / `tls.key`) mounted read-only; the
+Helm chart's `tls.*` values handle the mount and the matching probe scheme
+automatically (see [deployment.md](deployment.md)).
 
 ## API Response Envelope
 

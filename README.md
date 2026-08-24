@@ -30,7 +30,9 @@ More detail is in [docs/architecture.md](docs/architecture.md).
 ├── Makefile
 ├── README.md
 ├── build.gradle.kts
-├── docker-compose.yaml
+├── compose.yaml
+├── deploy
+│   └── helm/java-starter-boilerplate
 ├── docs
 │   ├── api-response.md
 │   ├── api-response.schema.json
@@ -42,11 +44,6 @@ More detail is in [docs/architecture.md](docs/architecture.md).
 │   └── libs.versions.toml
 ├── gradlew
 ├── gradlew.bat
-├── k8s
-│   ├── configmap.yaml
-│   ├── deployment.yaml
-│   ├── secret.yaml
-│   └── service.yaml
 └── src
     ├── main
     │   ├── java/com/example/javastarterboilerplate
@@ -174,8 +171,13 @@ Service discovery route:
 
 Operational shutdown behavior:
 
-- `/health/ready` flips to `not_ready` during application draining.
-- container images and `docker-compose` include an HTTP health check based on readiness.
+- `/readyz` flips to `not_ready` during application draining.
+- container images and `compose.yaml` include an HTTP(S) health check based on readiness.
+
+Kubernetes-standard probe routes:
+
+- `/healthz` — liveness
+- `/readyz` — readiness
 
 ## Development Without Local Java
 
@@ -374,16 +376,34 @@ Future business logic belongs in:
 
 ## Logging
 
-Logging uses Logback with:
+Logging uses Logback with three interchangeable output methods, selected via `LOG_TARGET`:
 
-- readable console logs
-- optional JSON file logs
-- weekly rotation
-- retention via `LOG_MAX_HISTORY`
-- gzip compression for archived files
-- separate application and error files when file logging is enabled
+- `stdout` (default) — container-native, collected by the runtime's log driver
+- `stderr` — separates application logs from error-stream collectors
+- `file` — rolling `application.log` / `error.log` with gzip archival, for bare-metal or VM deployments
 
-Default container behavior keeps file logging off and relies on stdout. Bare-metal or VM deployments can enable file logging with `FILE_LOGGING_ENABLED=true`.
+`LOG_FORMAT=json` (recommended in production) emits structured fields on every line:
+
+- `service` / `app` — application name
+- `version` — semantic version (`APP_VERSION`, baked into the image at build time)
+- `environment` — active Micronaut environments
+- `host` — pod/container hostname
+- `ip` — pod IP (`POD_IP`, populated via the Kubernetes downward API)
+- `level`, `message`, `logger`, `thread` — standard fields
+- `requestId` — correlation id from `X-Request-Id` / `X-Correlation-Id`, propagated via MDC
+
+`LOG_FORMAT=text` emits the same fields in a human-readable `key=value` line for local development.
+
+See [docs/configuration.md](docs/configuration.md#logging) for the full variable reference.
+
+## TLS
+
+Native Micronaut TLS is off by default and toggled entirely through environment variables (12-factor: config lives in the environment, not in code):
+
+- `TLS_ENABLED=false` (default) — plain HTTP, current behavior unchanged.
+- `TLS_ENABLED=true` — the server switches to HTTPS using a PEM certificate/key pair read from `TLS_CERT_PATH` / `TLS_KEY_PATH` (defaults: `/etc/tls/tls.crt`, `/etc/tls/tls.key` — the standard cert-manager `Secret` layout).
+
+Micronaut 4.x cannot serve HTTP and HTTPS on separate ports in one process, so enabling TLS switches the whole application — including `/healthz`, `/readyz` and `/metrics` — to HTTPS on the same port. A Kubernetes `Service` proxies TCP regardless of scheme, so no second Service port is needed; only the probe scheme follows the same flag (handled by the Helm chart's `tls.enabled` value).
 
 ## Docker
 
@@ -392,8 +412,9 @@ The repository includes a multi-stage `Dockerfile` with:
 - build stage on JDK 25
 - runtime stage on JRE 25
 - non-root runtime user
+- a `HEALTHCHECK` that follows `TLS_ENABLED` automatically
 
-Local Compose support is provided in `docker-compose.yaml` for:
+Local Compose support is provided in `compose.yaml` (`docker compose up`) for:
 
 - PostgreSQL
 - MinIO
@@ -401,19 +422,33 @@ Local Compose support is provided in `docker-compose.yaml` for:
 
 ## Kubernetes
 
-The `k8s/` directory contains:
+The `deploy/helm/java-starter-boilerplate/` chart contains:
 
-- `configmap.yaml`
-- `secret.yaml`
-- `service.yaml`
-- `deployment.yaml`
+- `Deployment`, `Service`, `ServiceAccount`, `ConfigMap`
+- optional `Ingress` and `ExternalSecret` (Vault/ESO) templates
+- `values.schema.json` for values validation
 
-These include:
+It includes:
 
 - resource requests/limits
-- readiness probe
-- liveness probe
-- config and secret placeholders
+- `/healthz` liveness probe, `/readyz` readiness probe and graceful-drain `preStop` hook
+- config via `values.yaml`; secrets via `existingSecret` or `externalSecret`
+- optional native TLS via `tls.enabled` (mounts a cert-manager `Secret`); `extraVolumes` / `extraVolumeMounts` for anything else
+
+See [docs/deployment.md](docs/deployment.md) for install and upgrade commands.
+
+## Twelve-Factor Alignment
+
+| Factor | How this starter applies it |
+|---|---|
+| Config | All runtime behavior (`MICRONAUT_ENVIRONMENTS`, `LOG_TARGET`, `TLS_ENABLED`, storage/DB settings) is env-var driven; see [docs/configuration.md](docs/configuration.md). |
+| Backing services | PostgreSQL, SQL Server and S3/MinIO are attached resources, swappable via env vars without code changes. |
+| Build, release, run | `Dockerfile` build stage produces an immutable image; `APP_VERSION`/`APP_BUILD_*` stamp the release; `MICRONAUT_ENVIRONMENTS` selects the run profile. |
+| Processes | The service is stateless; persistence and object storage live outside the process. |
+| Port binding | The app self-hosts HTTP/HTTPS on `containerPort` (default `8080`) via the embedded Netty server — no external container required. |
+| Disposability | Fast startup, `POST /health/drain` + `preStop` hook + `terminationGracePeriodSeconds` give graceful, fast shutdown. |
+| Dev/prod parity | The same image runs locally (`compose.yaml`), in Docker, and in Kubernetes (Helm); H2/PostgreSQL/SQL Server profiles keep dev and prod close. |
+| Logs | Logs are written as an event stream to stdout/stderr (`LOG_TARGET`), left for the runtime/collector to route — never managed by the app itself. |
 
 ## Coding Conventions
 

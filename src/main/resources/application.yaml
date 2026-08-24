@@ -10,6 +10,18 @@ micronaut:
     static-resources:
       swagger:
         enabled: false
+  server:
+    port: ${MICRONAUT_SERVER_PORT:8080}
+    ssl:
+      enabled: ${TLS_ENABLED:false}
+      port: ${MICRONAUT_SERVER_PORT:8080}
+      key-name: server
+  certificate:
+    file:
+      server:
+        format: pem
+        path: ${TLS_KEY_PATH:/etc/tls/tls.key}
+        certificate-path: ${TLS_CERT_PATH:/etc/tls/tls.crt}
 
 endpoints:
   all:

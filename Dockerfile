@@ -48,14 +48,15 @@ WORKDIR /app
 COPY --from=build /workspace/build/install/java-starter-boilerplate /app
 
 ENV MICRONAUT_ENVIRONMENTS=prod
-ENV FILE_LOGGING_ENABLED=false
 ENV APP_NAME=java-starter-boilerplate
+ENV APP_VERSION=${APP_VERSION}
 
 USER appuser
 
 EXPOSE 8080
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
-    CMD curl -fsS http://127.0.0.1:8080/health/ready | grep -q '"status":"ready"' || exit 1
+    CMD sh -c 'scheme=http; [ "$TLS_ENABLED" = "true" ] && scheme=https; \
+    curl -fsSk ${scheme}://127.0.0.1:8080/readyz | grep -q "\"status\":\"ready\"" || exit 1'
 
 ENTRYPOINT ["./bin/java-starter-boilerplate"]

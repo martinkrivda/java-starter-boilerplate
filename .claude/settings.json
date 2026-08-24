@@ -6,38 +6,15 @@
       "Bash(java -version:*)",
       "Bash(javac -version:*)",
       "Bash(jshell --version:*)",
+      "Bash(pwd:*)",
 
-      "Bash(mvn -version:*)",
-      "Bash(mvn help:*)",
-      "Bash(mvn validate:*)",
-      "Bash(mvn compile:*)",
-      "Bash(mvn test:*)",
-      "Bash(mvn verify:*)",
-      "Bash(mvn package:*)",
-      "Bash(mvn clean:*)",
-      "Bash(mvn dependency:tree:*)",
-      "Bash(mvn dependency:analyze:*)",
-      "Bash(mvn spotless:apply:*)",
-      "Bash(mvn spotless:check:*)",
-      "Bash(mvn checkstyle:check:*)",
-      "Bash(mvn pmd:check:*)",
-      "Bash(mvn jacoco:report:*)",
+      "Read(./.env.example)",
+      "Edit(./.env.example)",
+      "Write(./.env.example)",
 
-      "Bash(./mvnw -version:*)",
-      "Bash(./mvnw help:*)",
-      "Bash(./mvnw validate:*)",
-      "Bash(./mvnw compile:*)",
-      "Bash(./mvnw test:*)",
-      "Bash(./mvnw verify:*)",
-      "Bash(./mvnw package:*)",
-      "Bash(./mvnw clean:*)",
-      "Bash(./mvnw dependency:tree:*)",
-      "Bash(./mvnw dependency:analyze:*)",
-      "Bash(./mvnw spotless:apply:*)",
-      "Bash(./mvnw spotless:check:*)",
-      "Bash(./mvnw checkstyle:check:*)",
-      "Bash(./mvnw pmd:check:*)",
-      "Bash(./mvnw jacoco:report:*)",
+      "Bash(make check:*)",
+      "Bash(make format:*)",
+      "Bash(make test:*)",
 
       "Bash(gradle -version:*)",
       "Bash(gradle tasks:*)",
@@ -121,11 +98,21 @@
       "Bash(kubectl logs:*)",
       "Bash(kubectl explain:*)",
       "Bash(kubectl config view:*)",
+      "Bash(kubectl config current-context:*)",
+      "Bash(kubectl apply --dry-run=client:*)",
+      "Bash(kubectl diff:*)",
 
       "Bash(helm template:*)",
       "Bash(helm lint:*)",
       "Bash(helm list:*)",
       "Bash(helm show:*)",
+
+      "Bash(npx ctx7:*)",
+      "Bash(npx -y ctx7:*)",
+
+      "Bash(openssl req:*)",
+      "Bash(openssl x509:*)",
+      "Bash(openssl version:*)",
 
       "Write(./src/**)",
       "Write(./test/**)",
@@ -160,15 +147,6 @@
       "Bash(helm upgrade:*)",
       "Bash(helm uninstall:*)",
 
-      "Bash(mvn deploy:*)",
-      "Bash(mvn release:*)",
-      "Bash(mvn versions:set:*)",
-      "Bash(mvn spring-boot:run:*)",
-      "Bash(./mvnw deploy:*)",
-      "Bash(./mvnw release:*)",
-      "Bash(./mvnw versions:set:*)",
-      "Bash(./mvnw spring-boot:run:*)",
-
       "Bash(gradle publish:*)",
       "Bash(gradle release:*)",
       "Bash(gradle bootRun:*)",
@@ -185,9 +163,7 @@
       "Edit(./settings.gradle.kts)",
       "Edit(./gradle.properties)",
       "Edit(./Dockerfile)",
-      "Edit(./docker-compose.yaml)",
-      "Edit(./docker-compose.yml)",
-      "Edit(./.env.example)",
+      "Edit(./compose.yaml)",
       "Edit(./CLAUDE.md)"
     ],
     "deny": [
@@ -224,7 +200,7 @@
       "Bash(rm -fr:*)",
 
       "Read(./.env)",
-      "Read(./.env.*)",
+      "Read(./.env.local)",
       "Read(./secrets/**)",
       "Read(./**/*.pem)",
       "Read(./**/*.key)",
@@ -241,7 +217,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cmd=$(jq -r '.tool_input.command // empty'); echo \"$cmd\" | grep -qE '\\b(pip install|pip3 install|python -m pip install|pipx install|poetry add|poetry install|conda install|conda create|npm install|yarn add|pnpm add)\\b' && { echo 'Use Maven or Gradle for dependency management in this Java project — pip / poetry / conda / npm / yarn / pnpm installs are blocked' >&2; exit 2; } || exit 0"
+            "command": "cmd=$(jq -r '.tool_input.command // empty'); echo \"$cmd\" | grep -qE '\\b(pip install|pip3 install|python -m pip install|pipx install|poetry add|poetry install|conda install|conda create|npm install|yarn add|pnpm add)\\b' && { echo 'Use Gradle for dependency management in this Java project — pip / poetry / conda / npm / yarn / pnpm installs are blocked' >&2; exit 2; } || exit 0"
           }
         ]
       }
@@ -252,7 +228,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=$(jq -r '.tool_input.file_path // empty'); case \"$file\" in *.java) cd \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || exit 0; if [ -x ./mvnw ]; then ./mvnw -q -DskipTests spotless:apply >/dev/null 2>&1 || true; elif [ -f pom.xml ]; then mvn -q -DskipTests spotless:apply >/dev/null 2>&1 || true; elif [ -x ./gradlew ]; then ./gradlew spotlessApply >/dev/null 2>&1 || true; elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then gradle spotlessApply >/dev/null 2>&1 || true; fi ;; esac; exit 0"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); case \"$file\" in *.java) cd \"$CLAUDE_PROJECT_DIR\" 2>/dev/null || exit 0; if [ -x ./gradlew ]; then ./gradlew spotlessApply >/dev/null 2>&1 || true; elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then gradle spotlessApply >/dev/null 2>&1 || true; fi ;; esac; exit 0"
           }
         ]
       }
@@ -281,7 +257,6 @@
   "env": {
     "APP_ENV": "development",
     "JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF-8",
-    "MAVEN_OPTS": "-Dfile.encoding=UTF-8",
     "GRADLE_OPTS": "-Dfile.encoding=UTF-8",
     "DISABLE_TELEMETRY": "1"
   }

@@ -52,9 +52,9 @@ class ApiHttpTest {
   @Test
   void exposesReadinessAndLivenessEndpoints() {
     HttpResponse<String> readinessResponse =
-        httpClient.toBlocking().exchange(HttpRequest.GET("/health/ready"), String.class);
+        httpClient.toBlocking().exchange(HttpRequest.GET("/readyz"), String.class);
     HttpResponse<String> livenessResponse =
-        httpClient.toBlocking().exchange(HttpRequest.GET("/health/live"), String.class);
+        httpClient.toBlocking().exchange(HttpRequest.GET("/healthz"), String.class);
     Map<String, Object> readiness = parseJson(readinessResponse.body());
     Map<String, Object> liveness = parseJson(livenessResponse.body());
 
@@ -100,8 +100,8 @@ class ApiHttpTest {
         .containsEntry("info", "/rest/v1/info")
         .containsEntry("reference", "/reference")
         .containsEntry("openapi", "/doc")
-        .containsEntry("readiness", "/health/ready")
-        .containsEntry("liveness", "/health/live");
+        .containsEntry("readiness", "/readyz")
+        .containsEntry("liveness", "/healthz");
   }
 
   @Test
@@ -214,8 +214,7 @@ class ApiHttpTest {
         httpClient
             .toBlocking()
             .exchange(
-                HttpRequest.GET("/health/live")
-                    .header(RequestIdFilter.HEADER_NAME, "test-request-id"),
+                HttpRequest.GET("/healthz").header(RequestIdFilter.HEADER_NAME, "test-request-id"),
                 String.class);
     Map<String, Object> body = parseJson(response.body());
 
