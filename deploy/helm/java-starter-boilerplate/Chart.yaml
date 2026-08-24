@@ -1,0 +1,6 @@
+apiVersion: v2
+name: java-starter-boilerplate
+description: Micronaut starter for document sealing and signing services
+type: application
+version: 0.1.0
+appVersion: "0.1.0-SNAPSHOT"
