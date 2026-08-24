@@ -1,5 +1,6 @@
 package com.example.javastarterboilerplate.application;
 
+import com.example.javastarterboilerplate.api.dto.ApplicationBuildInfoResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationComponentStatusResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationInfoResponse;
 import com.example.javastarterboilerplate.config.ApplicationInfoProperties;
@@ -86,6 +87,10 @@ public class ApplicationInfoService {
     return new ApplicationInfoResponse(
         applicationInfoProperties.getName(),
         applicationInfoProperties.getVersion(),
+        new ApplicationBuildInfoResponse(
+            applicationInfoProperties.getBuildNumber(),
+            applicationInfoProperties.getBuildCommit(),
+            applicationInfoProperties.getBuildTimestamp()),
         applicationInfoProperties.getDescription(),
         persistenceProperties.getVendor(),
         activeEnvironments,
