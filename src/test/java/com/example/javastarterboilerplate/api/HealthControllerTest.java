@@ -3,6 +3,7 @@ package com.example.javastarterboilerplate.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.javastarterboilerplate.api.controller.HealthController;
+import com.example.javastarterboilerplate.api.dto.ApplicationBuildInfoResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationComponentStatusResponse;
 import com.example.javastarterboilerplate.api.dto.ApplicationInfoResponse;
 import com.example.javastarterboilerplate.api.dto.HealthFullResponse;
@@ -40,6 +41,7 @@ class HealthControllerTest {
             new ApplicationInfoResponse(
                 "starter",
                 "1.0.0",
+                buildInfo(),
                 "desc",
                 "none",
                 List.of("test"),
@@ -97,6 +99,7 @@ class HealthControllerTest {
             new ApplicationInfoResponse(
                 "starter",
                 "1.0.0",
+                buildInfo(),
                 "desc",
                 "none",
                 List.of("test"),
@@ -105,5 +108,9 @@ class HealthControllerTest {
                     new ApplicationComponentStatusResponse("pdfbox", true, "ready"),
                     new ApplicationComponentStatusResponse("dss", true, "ready"))));
     return service;
+  }
+
+  private ApplicationBuildInfoResponse buildInfo() {
+    return new ApplicationBuildInfoResponse("42", "abc123", "2026-05-07T10:15:30Z");
   }
 }

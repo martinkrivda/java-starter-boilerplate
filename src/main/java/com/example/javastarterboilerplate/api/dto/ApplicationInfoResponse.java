@@ -9,6 +9,7 @@ import java.util.List;
  *
  * @param name application name
  * @param version deployed application version
+ * @param build build metadata for the deployed artifact
  * @param description short application description
  * @param activeDatabaseProfile active persistence profile, e.g. {@code "h2"} or {@code
  *     "postgresql"}
@@ -19,6 +20,7 @@ import java.util.List;
 public record ApplicationInfoResponse(
     String name,
     String version,
+    ApplicationBuildInfoResponse build,
     String description,
     String activeDatabaseProfile,
     List<String> activeEnvironments,

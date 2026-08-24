@@ -4,7 +4,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import java.util.List;
 
 /**
- * Readiness probe response returned by {@code GET /health/ready}.
+ * Readiness probe response returned by {@code GET /readyz}.
  *
  * @param status {@code "ready"} when the service can accept traffic, {@code "not_ready"} during
  *     drain
