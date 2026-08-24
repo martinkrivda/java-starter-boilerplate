@@ -41,8 +41,8 @@ public class RootController {
             "reference", "/reference",
             "openapi", "/doc",
             "health", "/health",
-            "readiness", "/health/ready",
-            "liveness", "/health/live",
+            "readiness", "/readyz",
+            "liveness", "/healthz",
             "metrics", "/metrics"));
   }
 }

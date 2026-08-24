@@ -28,6 +28,9 @@ class ApplicationInfoServiceTest {
   @Test
   void reportsEnabledStorageWhenAdapterIsPresent() {
     ApplicationInfoProperties infoProperties = new ApplicationInfoProperties();
+    infoProperties.setBuildNumber("42");
+    infoProperties.setBuildCommit("abc123");
+    infoProperties.setBuildTimestamp("2026-05-07T10:15:30Z");
     PersistenceProperties persistenceProperties = new PersistenceProperties();
     persistenceProperties.setEnabled(true);
     persistenceProperties.setVendor("postgresql");
@@ -103,6 +106,9 @@ class ApplicationInfoServiceTest {
 
     ApplicationInfoResponse info = service.getInfo();
 
+    assertThat(info.build().number()).isEqualTo("42");
+    assertThat(info.build().commit()).isEqualTo("abc123");
+    assertThat(info.build().timestamp()).isEqualTo("2026-05-07T10:15:30Z");
     assertThat(info.activeDatabaseProfile()).isEqualTo("postgresql");
     assertThat(info.activeEnvironments()).containsExactly("dev", "postgresql");
     assertThat(info.integrations())
