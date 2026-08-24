@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Provides health, liveness and readiness endpoints used by Kubernetes probes and monitoring.
+ * Provides the full health check and graceful-drain endpoints.
  *
  * <p>The full health response ({@code GET /health}) includes integration component statuses
- * collected from {@code ApplicationInfoService}. The liveness probe ({@code GET /health/live})
- * always returns UP unless the JVM has crashed. The readiness probe ({@code GET /health/ready})
- * returns {@code not_ready} when the application is draining.
+ * collected from {@code ApplicationInfoService}. Liveness and readiness are served by {@link
+ * HealthProbeController} at the Kubernetes-standard {@code /healthz} and {@code /readyz} paths;
+ * this class exposes the underlying {@link #live()} and {@link #ready()} logic for that controller
+ * to delegate to.
  *
  * <p>The drain endpoint ({@code POST /health/drain}) triggers a controlled shutdown signal without
  * stopping the JVM, allowing Kubernetes to remove the pod from load balancer rotation before the
@@ -63,18 +64,12 @@ public class HealthController {
         checks);
   }
 
-  @Get("/live")
-  @Operation(
-      summary = "Liveness probe",
-      description = "Returns a basic liveness status used by orchestration systems.")
+  /** Liveness logic backing {@code GET /healthz}, served by {@link HealthProbeController}. */
   public HealthLivenessResponse live() {
     return new HealthLivenessResponse("UP");
   }
 
-  @Get("/ready")
-  @Operation(
-      summary = "Readiness probe",
-      description = "Returns readiness status and dependency checks.")
+  /** Readiness logic backing {@code GET /readyz}, served by {@link HealthProbeController}. */
   public HealthReadinessResponse ready() {
     List<HealthCheckResponse> checks = checks();
     boolean allUp = checks.stream().noneMatch(this::isBlockingFailure);
