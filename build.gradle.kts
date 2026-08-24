@@ -5,6 +5,8 @@ import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.jvm.tasks.Jar
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 plugins {
     alias(libs.plugins.micronaut.application)
@@ -22,6 +24,24 @@ repositories {
 }
 
 val projectVersion = version.toString()
+val generatedBuildTimestamp = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString()
+val buildNumber =
+    providers
+        .environmentVariable("BUILD_NUMBER")
+        .orElse(providers.environmentVariable("GITHUB_RUN_NUMBER"))
+        .orElse(providers.environmentVariable("CI_PIPELINE_IID"))
+        .orElse("local")
+val buildCommit =
+    providers
+        .environmentVariable("GIT_COMMIT")
+        .orElse(providers.environmentVariable("GITHUB_SHA"))
+        .orElse(providers.environmentVariable("CI_COMMIT_SHA"))
+        .orElse("unknown")
+val buildTimestamp =
+    providers
+        .environmentVariable("BUILD_TIMESTAMP")
+        .orElse(providers.environmentVariable("CI_COMMIT_TIMESTAMP"))
+        .orElse(generatedBuildTimestamp)
 val applicationMainClass = "com.example.javastarterboilerplate.Application"
 val spotlessIgnorePatterns =
     file(".spotlessignore")
@@ -161,9 +181,17 @@ tasks.withType<Checkstyle>().configureEach {
 
 tasks.processResources {
     filteringCharset = "UTF-8"
+    inputs.property("projectVersion", projectVersion)
+    inputs.property("buildNumber", buildNumber)
+    inputs.property("buildCommit", buildCommit)
+    inputs.property("buildTimestamp", buildTimestamp)
     filesMatching("application*.yaml") {
         filter { line: String ->
-            line.replace("@projectVersion@", projectVersion)
+            line
+                .replace("@projectVersion@", projectVersion)
+                .replace("@buildNumber@", buildNumber.get())
+                .replace("@buildCommit@", buildCommit.get())
+                .replace("@buildTimestamp@", buildTimestamp.get())
         }
     }
 }
@@ -233,14 +261,23 @@ tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
 
 tasks.withType<JavaExec>().configureEach {
     systemProperty("app.version", projectVersion)
+    systemProperty("app.build.number", buildNumber.get())
+    systemProperty("app.build.commit", buildCommit.get())
+    systemProperty("app.build.timestamp", buildTimestamp.get())
 }
 
 tasks.withType<Jar>().configureEach {
+    inputs.property("buildNumber", buildNumber)
+    inputs.property("buildCommit", buildCommit)
+    inputs.property("buildTimestamp", buildTimestamp)
     manifest {
         attributes(
             "Main-Class" to applicationMainClass,
             "Implementation-Title" to rootProject.name,
             "Implementation-Version" to projectVersion,
+            "Build-Number" to buildNumber.get(),
+            "Build-Commit" to buildCommit.get(),
+            "Build-Timestamp" to buildTimestamp.get(),
         )
     }
 }
@@ -250,12 +287,18 @@ val fatJar by tasks.registering(Jar::class) {
     description = "Builds an executable fat JAR for CLI and service execution."
     archiveClassifier.set("all")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    inputs.property("buildNumber", buildNumber)
+    inputs.property("buildCommit", buildCommit)
+    inputs.property("buildTimestamp", buildTimestamp)
 
     manifest {
         attributes(
             "Main-Class" to applicationMainClass,
             "Implementation-Title" to rootProject.name,
             "Implementation-Version" to projectVersion,
+            "Build-Number" to buildNumber.get(),
+            "Build-Commit" to buildCommit.get(),
+            "Build-Timestamp" to buildTimestamp.get(),
         )
     }
 

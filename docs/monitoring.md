@@ -41,7 +41,8 @@ METRICS_PROMETHEUS_ENABLED=false
 
 ## Kubernetes Notes
 
-`k8s/service.yaml` includes standard scrape annotations:
+The Helm chart's Service template (`deploy/helm/java-starter-boilerplate/templates/service.yaml`)
+includes standard scrape annotations:
 
 - `prometheus.io/scrape: "true"`
 - `prometheus.io/path: /metrics`

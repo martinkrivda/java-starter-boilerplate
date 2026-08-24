@@ -10,6 +10,12 @@
   - `docs:`
   - `refactor:`
   - `test:`
+- Mark breaking changes with `!` in the type, for example `feat!:`, or with a `BREAKING CHANGE:` footer.
+- Use Conventional Commits to guide SemVer bumps:
+  - `fix:` maps to PATCH.
+  - `feat:` maps to MINOR.
+  - breaking changes map to MAJOR.
+  - maintenance-only commits do not require a release bump unless they affect public behavior or published artifacts.
 - Use lowercase branch prefixes:
   - `feature/`
   - `bugfix/`

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "java-starter-boilerplate.fullname" . }}
+  labels:
+    {{- include "java-starter-boilerplate.labels" . | nindent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: {{ .Values.containerPort | quote }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "java-starter-boilerplate.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP

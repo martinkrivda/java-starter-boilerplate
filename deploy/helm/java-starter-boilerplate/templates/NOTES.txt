@@ -1,0 +1,18 @@
+{{- $fullname := include "java-starter-boilerplate.fullname" . -}}
+java-starter-boilerplate has been deployed.
+
+{{- if .Values.ingress.enabled }}
+{{- range .Values.ingress.hosts }}
+Application URL: http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
+{{- end }}
+{{- else }}
+The application is not exposed via Ingress. Reach it with:
+
+  kubectl port-forward svc/{{ $fullname }} 8080:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+{{- end }}
+
+Verify the rollout:
+
+  kubectl get pods -l app.kubernetes.io/name={{ include "java-starter-boilerplate.name" . }} -n {{ .Release.Namespace }}
+
+See docs/deployment.md for full deployment and configuration details.
